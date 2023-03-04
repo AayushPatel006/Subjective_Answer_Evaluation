@@ -1,4 +1,5 @@
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 import "./styles/App.css";
 import {
 	BrowserRouter as Router,
@@ -12,6 +13,9 @@ function App() {
 	<Router>
     	<Routes>
           <Route exact path="/login"  element={<Login/>}></Route>
+      	</Routes>
+		  <Routes>
+          <Route exact path="/signup"  element={<Signup/>}></Route>
       	</Routes>
     </Router>
 	</div>;
