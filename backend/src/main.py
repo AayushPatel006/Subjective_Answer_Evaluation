@@ -6,8 +6,21 @@ from typing import Optional
 import uvicorn
 from db import users
 from models.user import UserModel, LoginModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 @app.get("/")
@@ -17,6 +30,9 @@ def read_root():
 
 @app.post("/register")
 def register(data: UserModel):
+
+    print(data)
+
     # Checking if a user with the same email already exists
     existing_user = users.find_one({"email": data.email})
 
