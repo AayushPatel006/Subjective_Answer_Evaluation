@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useRef } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
-import { NavLink } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import notify from "../utils/toast";
+import httpRequest from "../utils/httpRequest";
 
 export default function Login() {
+	const email_ref = useRef(null);
+	const password_ref = useRef(null);
+
+	const navigate = useNavigate();
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
+		const email = email_ref.current.value;
+		const password = password_ref.current.value;
+
+		const { data, error } = await httpRequest("/login", "post", {
+			email: email,
+			password: password,
+		});
+
+		if (!error) {
+			localStorage.setItem("token", data);
+			return navigate("/");
+		}
+	};
+
 	return (
 		<div
 			className={`relative h-screen w-full bg-zinc-600`}
@@ -11,8 +35,8 @@ export default function Login() {
 			}}
 		>
 			<div className="flex flex-col justify-center items-center h-full">
-				<div
-					action=""
+				<form
+					onSubmit={handleSubmit}
 					className="max-w-[480px] rounded-xl shadow-lg shadow-black p-8 w-full mx-auto bg-white"
 				>
 					<h2 className="font-bold text-4xl mb-8 text-center py-4">
@@ -24,8 +48,9 @@ export default function Login() {
 							className="border rounded relative p-1.5"
 							type="email"
 							placeholder="Enter email"
-							name=""
-							id=""
+							name="email"
+							id="email"
+							ref={email_ref}
 						/>
 
 						<div className="flex flex-col ">
@@ -34,16 +59,21 @@ export default function Login() {
 								className="border relative rounded bg-transparent p-1.5"
 								type="password"
 								placeholder="Enter password"
+								minLength={5}
+								id="name"
+								name="name"
+								ref={password_ref}
+								required
 							/>
 						</div>
 						<button className="w-full py-3 my-4 rounded bg-blue-500 hover:bg-blue-400 relative text-white">
 							Sign In
 						</button>
-						<h5 className="text-center font-bold cursor-pointer">
-							<NavLink to="/signup">Not a member? Sign-up Now</NavLink>
+						<h5 className="text-center font-bold ">
+							Not a member? <Link to="/register">Sign-up Now</Link>
 						</h5>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	);

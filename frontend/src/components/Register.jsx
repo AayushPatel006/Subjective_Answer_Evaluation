@@ -106,7 +106,7 @@ export default function Register() {
 					>
 						Sign Up
 					</button>
-					<h5 className="text-center font-bold cursor-pointer">
+					<h5 className="text-center font-bold ">
 						Already Registered? <Link to="/login">Sign-In</Link>
 					</h5>
 				</form>
