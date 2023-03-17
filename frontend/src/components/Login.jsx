@@ -1,6 +1,7 @@
 import React from "react";
-import LoginImg from "../assets/loginImg2.jpeg"
+import LoginImg from "../assets/loginImg2.jpeg";
 import { NavLink } from "react-router-dom";
+
 export default function Login() {
 	return (
 		<div className={`relative h-screen w-full bg-zinc-600`} style={{
@@ -18,22 +19,23 @@ export default function Login() {
 				name=""
 				id=""
 			  />
+
+					<div className="flex flex-col ">
+						<label className="text-base font-bold">Password</label>
+						<input
+							className="border relative rounded bg-transparent p-1.5"
+							type="password"
+							placeholder="Enter password"
+						/>
+					</div>
+					<button className="w-full py-3 my-4 rounded bg-blue-500 hover:bg-blue-400 relative text-white">
+						Sign In
+					</button>
+					<h5 className="text-center font-bold cursor-pointer">
+						<NavLink to="/signup">Not a member? Sign-up Now</NavLink>
+					</h5>
+				</div>
 			</div>
-  
-			<div className="flex flex-col ">
-			  <label className="text-base font-bold">Password</label>
-			  <input
-				className="border relative rounded bg-transparent p-1.5"
-				type="password"
-				placeholder="Enter password"
-			  />
-			</div>
-			<button className="w-full py-3 my-4 rounded bg-blue-500 hover:bg-blue-400 relative text-white">
-			  Sign In
-			</button>
-  			<h5 className="text-center font-bold cursor-pointer"><NavLink to="/signup">Not a member? Sign-up Now</NavLink></h5>
-		  </div>
 		</div>
-	  </div>  
-	)
+	);
 }
