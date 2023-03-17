@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginImg2.jpeg";
-import { NavLink } from "react-router-dom";
-import notify from "../utils/toast";
 import axiosInstance from "../utils/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import notify from "../utils/toast";
+import httpRequest from "../utils/httpRequest";
 
 export default function Register() {
 	const full_name_ref = useRef(null);
@@ -25,21 +25,15 @@ export default function Register() {
 			return;
 		}
 
-		// making a API call
-		try {
-			const { data } = await axiosInstance.post("/register", {
-				full_name: full_name,
-				password: password,
-				email: email,
-			});
-			notify(data.msg, data.ok ? "success" : "error");
+		const { data, error } = await httpRequest("/register", "post", {
+			full_name: full_name,
+			password: password,
+			email: email,
+		});
 
-			if (data.ok) {
-				return navigate("/login");
-			}
-		} catch (err) {
-			const { detail } = err.response.data;
-			notify(detail, "error");
+		if (!error) {
+			notify(data.msg, "success");
+			return navigate("/login");
 		}
 	};
 

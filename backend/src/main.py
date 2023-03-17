@@ -69,7 +69,7 @@ def login(data: LoginModel):
     # If user not found, then raise a error
     if user == None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail={"msg": "User doesn't exists", "ok": True})
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
 
     # The user is exists, so verify the password. If correct then return a JWT token containing
     # 1. email
@@ -79,13 +79,11 @@ def login(data: LoginModel):
         return create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
 
     # If the password is incorrect, raise a error
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={
-        "msg": "Password Incorrect",
-        "ok": False
-    })
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Password Incorrect")
 
 
-@app.get("/protected")
+@ app.get("/protected")
 def protected(data: dict = Depends(decode_token)):
     return data
 
