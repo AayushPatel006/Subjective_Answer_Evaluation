@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginImg2.jpeg";
-import axiosInstance from "../utils/axiosInstance";
 import notify from "../utils/toast";
 import httpRequest from "../utils/httpRequest";
 
@@ -109,7 +108,7 @@ export default function Register() {
 						Sign Up
 					</button>
 					<h5 className="text-center font-bold cursor-pointer">
-						<NavLink to="/login">Already Registered? Sign-In</NavLink>
+						Already Registered? <Link to="/login">Sign-In</Link>
 					</h5>
 				</form>
 			</div>
