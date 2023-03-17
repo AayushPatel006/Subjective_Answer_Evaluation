@@ -1,5 +1,6 @@
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import StudHome from "./components/StudentHome"
 import "./styles/App.css";
 import {
 	BrowserRouter as Router,
@@ -16,6 +17,9 @@ function App() {
       	</Routes>
 		  <Routes>
           <Route exact path="/signup"  element={<Signup/>}></Route>
+      	</Routes>
+		<Routes>
+		  <Route exact path="/"  element={<StudHome/>}></Route>
       	</Routes>
     </Router>
 	</div>;
