@@ -1,11 +1,11 @@
 import axiosInstance from "./axiosInstance";
 import notify from "./toast";
 
-const httpRequest = async (url, type, body) => {
+const httpRequest = async (url, type, body, showToast) => {
 	try {
 		switch (type) {
 			case "get":
-				return await handleGet(url);
+				return await handleGet(url, body);
 			case "post":
 				return await handlePost(url, body);
 
@@ -14,14 +14,15 @@ const httpRequest = async (url, type, body) => {
 				break;
 		}
 	} catch (err) {
+		console.log(err);
 		const { detail } = err.response.data;
-		notify(detail, "error");
+		if (showToast) notify(detail, "error");
 		return { data: false, error: err };
 	}
 };
 
-const handleGet = async (url) => {
-	return await axiosInstance.get(url);
+const handleGet = async (url, body) => {
+	return await axiosInstance.get(url, body);
 };
 const handlePost = async (url, body) => {
 	return await axiosInstance.post(url, body);

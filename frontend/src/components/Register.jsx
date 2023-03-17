@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginImg2.jpeg";
 import notify from "../utils/toast";
 import httpRequest from "../utils/httpRequest";
+import verifyToken from "../utils/verifyToken";
 
 export default function Register() {
 	const full_name_ref = useRef(null);
@@ -10,6 +11,15 @@ export default function Register() {
 	const password_ref = useRef(null);
 	const confirm_password_ref = useRef(null);
 	const navigate = useNavigate();
+
+	useLayoutEffect(() => {
+		const get = async () => {
+			const data = await verifyToken();
+			if (data) navigate("/");
+		};
+
+		get();
+	}, []);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -24,11 +34,16 @@ export default function Register() {
 			return;
 		}
 
-		const { data, error } = await httpRequest("/register", "post", {
-			full_name: full_name,
-			password: password,
-			email: email,
-		});
+		const { data, error } = await httpRequest(
+			"/register",
+			"post",
+			{
+				full_name: full_name,
+				password: password,
+				email: email,
+			},
+			true
+		);
 
 		if (!error) {
 			notify(data.msg, "success");

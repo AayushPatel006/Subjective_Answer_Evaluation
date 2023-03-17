@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
-import notify from "../utils/toast";
 import httpRequest from "../utils/httpRequest";
+import verifyToken from "../utils/verifyToken";
 
 export default function Login() {
 	const email_ref = useRef(null);
@@ -10,19 +10,33 @@ export default function Login() {
 
 	const navigate = useNavigate();
 
+	useLayoutEffect(() => {
+		const get = async () => {
+			const data = await verifyToken();
+			if (data) navigate("/");
+		};
+
+		get();
+	}, []);
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const email = email_ref.current.value;
 		const password = password_ref.current.value;
 
-		const { data, error } = await httpRequest("/login", "post", {
-			email: email,
-			password: password,
-		});
+		const { data, error } = await httpRequest(
+			"/login",
+			"post",
+			{
+				email: email,
+				password: password,
+			},
+			true
+		);
 
 		if (!error) {
-			localStorage.setItem("token", data);
+			localStorage.setItem("token", data.token);
 			return navigate("/");
 		}
 	};

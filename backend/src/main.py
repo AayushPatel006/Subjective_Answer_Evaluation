@@ -76,17 +76,22 @@ def login(data: LoginModel):
     # 2. full_name
     # 3. role
     if (verify_hashed_password(data.password, user['password'])):
-        return create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+        return {
+            "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+        }
 
     # If the password is incorrect, raise a error
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                         detail="Password Incorrect")
 
 
-@ app.get("/protected")
+@app.get("/protected")
 def protected(data: dict = Depends(decode_token)):
     return data
 
+@app.get("/verify")
+def verify(token:str):
+    return decode_token(token=token)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, log_level="info", reload=True)
