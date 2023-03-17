@@ -37,13 +37,12 @@ export default function Register() {
 	};
 
 	return (
-		<div className="relative h-screen w-full bg-zinc-600">
-			<img
-				src={LoginImg}
-				alt="Study Image"
-				className="absolute h-full w-full object-cover mix-blend-overlay"
-			/>
-
+		<div
+			className={`relative h-screen w-full bg-zinc-600`}
+			style={{
+				backgroundImage: `url(${LoginImg})`,
+			}}
+		>
 			<div className="flex flex-col justify-center items-center h-full">
 				<form
 					onSubmit={handleSubmit}
