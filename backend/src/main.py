@@ -6,8 +6,21 @@ from typing import Optional
 import uvicorn
 from db import users
 from models.user import UserModel, LoginModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 @app.get("/")
@@ -17,6 +30,9 @@ def read_root():
 
 @app.post("/register")
 def register(data: UserModel):
+
+    print(data)
+
     # Checking if a user with the same email already exists
     existing_user = users.find_one({"email": data.email})
 
@@ -53,26 +69,29 @@ def login(data: LoginModel):
     # If user not found, then raise a error
     if user == None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail={"msg": "User doesn't exists", "ok": True})
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
 
     # The user is exists, so verify the password. If correct then return a JWT token containing
     # 1. email
     # 2. full_name
     # 3. role
     if (verify_hashed_password(data.password, user['password'])):
-        return create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+        return {
+            "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+        }
 
     # If the password is incorrect, raise a error
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={
-        "msg": "Password Incorrect",
-        "ok": False
-    })
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Password Incorrect")
 
 
 @app.get("/protected")
 def protected(data: dict = Depends(decode_token)):
     return data
 
+@app.get("/verify")
+def verify(token:str):
+    return decode_token(token=token)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, log_level="info", reload=True)
