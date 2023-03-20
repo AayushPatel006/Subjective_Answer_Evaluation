@@ -11,9 +11,9 @@ import Nav from './Nav'
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className='w-full h-screen flex items-center bg-gradient-to-r from-white to-slate-300'>
+    <div className='w-full h-screen flex items-center bg-gradient-to-r from-zinc-500 to-gray-600'>
       <Nav />
-      <div className="w-2/5 h-2/3 shadow-md shadow-gray-700 mt-2 ml-10 bg-gray-400">
+      <div className="w-2/5 h-2/3 shadow-md shadow-gray-700 mt-2 ml-10 bg-zinc-500">
       <Menu as="div" className="relative inline-block text-left">
             <div>
                 <Menu.Button className="inline-flex w-[547px] px-4 py-2 text-md font-semibold text-white bg-gray-400 border border-gray-400 shadow-lg">
