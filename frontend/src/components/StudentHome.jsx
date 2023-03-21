@@ -9,8 +9,7 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
-import Nav from "./Nav";
-const Home = () => {
+const StudHome = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="w-full h-screen flex items-center bg-slate-900">
@@ -204,3 +203,5 @@ const Home = () => {
     </div>
   );
 };
+
+export default StudHome;
