@@ -1,51 +1,32 @@
-import React, { useRef, useLayoutEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import verifyToken from "../utils/verifyToken";
-import { LoginContext } from "../context/AuthContext";
+import useAuth from "../hooks/useAuth";
 
 export default function Login() {
 	const email_ref = useRef(null);
 	const password_ref = useRef(null);
+	const { user, login } = useAuth();
 
 	const navigate = useNavigate();
 
-	const { setUserEmail, setUserFullName, setUserRole } = useContext(LoginContext);
-
-	useLayoutEffect(() => {
-		const get = async () => {
-			const data = await verifyToken();
-			if (data) navigate("/");
-		};
-
-		get();
-	}, []);
+	useEffect(() => {
+		if (user) {
+			navigate("/");
+		}
+	}, [user]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const email = email_ref.current.value;
 		const password = password_ref.current.value;
+		const result = await login(email, password);
 
-		const { data, error } = await httpRequest(
-			"/login",
-			"post",
-			{
-				email: email,
-				password: password,
-			},
-			true
-		);
-
-		if (!error) {
-			localStorage.setItem("token", data.token);
-			const pulledData = await verifyToken();
-            console.log(pulledData);
-			setUserEmail(pulledData.email);
-			setUserFullName(pulledData.name);
-			setUserRole(pulledData.role);
-			return navigate("/");
+		if (result) {
+			navigate("/");
 		}
 	};
 

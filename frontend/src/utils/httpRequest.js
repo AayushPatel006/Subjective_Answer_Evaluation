@@ -15,7 +15,7 @@ const httpRequest = async (url, type, body, showToast) => {
 		}
 	} catch (err) {
 		console.log(err);
-		const { detail } = err.response.data;
+		const { detail } = err.response.data || err.message;
 		if (showToast) notify(detail, "error");
 		return { data: false, error: err };
 	}
