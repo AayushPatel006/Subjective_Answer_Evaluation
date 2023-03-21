@@ -1,16 +1,14 @@
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment, useLayoutEffect, useState } from "react";
-import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
-// import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
 const StudHome = () => {
-  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="w-full h-screen flex items-center bg-slate-900">
       <Nav />
