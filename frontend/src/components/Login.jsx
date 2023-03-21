@@ -1,14 +1,17 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect, useContext } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import verifyToken from "../utils/verifyToken";
+import { LoginContext } from "../context/AuthContext";
 
 export default function Login() {
 	const email_ref = useRef(null);
 	const password_ref = useRef(null);
 
 	const navigate = useNavigate();
+
+	const { setUserEmail, setUserFullName, setUserRole } = useContext(LoginContext);
 
 	useLayoutEffect(() => {
 		const get = async () => {
@@ -37,6 +40,11 @@ export default function Login() {
 
 		if (!error) {
 			localStorage.setItem("token", data.token);
+			const pulledData = await verifyToken();
+            console.log(pulledData);
+			setUserEmail(pulledData.email);
+			setUserFullName(pulledData.name);
+			setUserRole(pulledData.role);
 			return navigate("/");
 		}
 	};
