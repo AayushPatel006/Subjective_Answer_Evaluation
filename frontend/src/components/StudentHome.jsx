@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import React, { Fragment, useLayoutEffect, useState } from "react";
+import verifyToken from "../utils/verifyToken";
+import Nav from "./Nav";
+import { useNavigate } from "react-router-dom";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+	return classes.filter(Boolean).join(" ");
 }
 
 import Nav from "./Nav";
@@ -202,5 +204,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;
