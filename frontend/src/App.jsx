@@ -1,7 +1,6 @@
 import Login from "./components/Login";
 import Register from "./components/Register";
-import StudHome from "./components/StudentHome";
-import Home from "./components/Home"
+import Home from "./components/Home";
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";

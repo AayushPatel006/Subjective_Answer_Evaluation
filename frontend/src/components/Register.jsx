@@ -1,25 +1,24 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginImg2.jpeg";
 import notify from "../utils/toast";
 import httpRequest from "../utils/httpRequest";
-import verifyToken from "../utils/verifyToken";
+import useAuth from "../hooks/useAuth";
 
 export default function Register() {
 	const full_name_ref = useRef(null);
 	const email_ref = useRef(null);
 	const password_ref = useRef(null);
 	const confirm_password_ref = useRef(null);
+	const { user, register } = useAuth();
+
 	const navigate = useNavigate();
 
-	useLayoutEffect(() => {
-		const get = async () => {
-			const data = await verifyToken();
-			if (data) navigate("/");
-		};
-
-		get();
-	}, []);
+	useEffect(() => {
+		if (user) {
+			navigate("/");
+		}
+	}, [user]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -28,26 +27,12 @@ export default function Register() {
 		const password = password_ref.current.value;
 		const confirm_password = confirm_password_ref.current.value;
 
-		// checking if both the password matches
-		if (password !== confirm_password) {
-			notify("Password doesn't match", "error");
-			return;
-		}
+		const result = await register(full_name, email, password, confirm_password);
 
-		const { data, error } = await httpRequest(
-			"/register",
-			"post",
-			{
-				full_name: full_name,
-				password: password,
-				email: email,
-			},
-			true
-		);
+		if (result) {
+			notify(result.msg, "success");
 
-		if (!error) {
-			notify(data.msg, "success");
-			return navigate("/login");
+			navigate("/login");
 		}
 	};
 

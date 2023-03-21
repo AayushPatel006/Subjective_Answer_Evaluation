@@ -1,43 +1,32 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import verifyToken from "../utils/verifyToken";
+import useAuth from "../hooks/useAuth";
 
 export default function Login() {
 	const email_ref = useRef(null);
 	const password_ref = useRef(null);
+	const { user, login } = useAuth();
 
 	const navigate = useNavigate();
 
-	useLayoutEffect(() => {
-		const get = async () => {
-			const data = await verifyToken();
-			if (data) navigate("/");
-		};
-
-		get();
-	}, []);
+	useEffect(() => {
+		if (user) {
+			navigate("/");
+		}
+	}, [user]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const email = email_ref.current.value;
 		const password = password_ref.current.value;
+		const result = await login(email, password);
 
-		const { data, error } = await httpRequest(
-			"/login",
-			"post",
-			{
-				email: email,
-				password: password,
-			},
-			true
-		);
-
-		if (!error) {
-			localStorage.setItem("token", data.token);
-			return navigate("/");
+		if (result) {
+			navigate("/");
 		}
 	};
 
