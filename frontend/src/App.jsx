@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FacultyHome from "./components/FacultyHome";
 import CreateQuest from "./components/CreateQuest";
-// import ExamSolving from "./components/ExamSolving";
+import ExamSolving from "./components/ExamSolving";
 
 function App() {
 	return (
@@ -35,11 +35,11 @@ function App() {
 						path="/createQuest"
 						element={<CreateQuest />}
 					/>
-					{/* <Route
+					<Route
 						exact
 						path="/examSolving"
 						element={<ExamSolving />}
-					/> */}
+					/>
 					<Route
 						exact
 						path="/"
