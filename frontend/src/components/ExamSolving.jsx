@@ -59,7 +59,7 @@ const examSolving = () => {
            {listItems}
         </ul>
         <div className="flex justify-center mt-3 mb-2">
-        <button className="p-2 bg-stone-500 w-1/2 rounded-lg shadow-md hover:bg-stone-600 hover:border-stone-600">
+        <button className="text-white font-semibold p-2 bg-stone-500 w-1/2 rounded-lg shadow-md hover:bg-stone-600 hover:border-stone-600">
             End Exam
         </button>
         </div>
