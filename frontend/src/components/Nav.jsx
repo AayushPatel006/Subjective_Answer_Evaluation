@@ -8,7 +8,7 @@ const Nav = () => {
 	const { user, logout } = useAuth();
 	return (
 		<div className=" w-full absolute top-0 left-0">
-			<div className="md:flex shadow-md justify-between bg-sky-900 backdrop-blur py-6 md:px-10 px:7">
+			<div className="md:flex shadow-md justify-between bg-[#1B4B5A] backdrop-blur py-6 md:px-10 px:7">
 				<div className="mx-10 flex font-bold text-1xl items-center font-[Arial] text-white">
 					<span>
 						<img

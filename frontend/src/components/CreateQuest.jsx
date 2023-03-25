@@ -12,9 +12,9 @@ function classNames(...classes) {
 const createExam = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="w-full h-screen flex items-center bg-slate-900 justify-center">
+    <div className="w-full h-screen flex items-center bg-[#0F1F38] justify-center">
       <Nav />
-      <div className="flex flex-col w-[700px] h-[500px] shadow-md shadow-black bg-sky-900 mt-16 ml-10 mr-10">
+      <div className="flex flex-col w-[700px] h-[500px] shadow-md shadow-black bg-[#1B4B5A] mt-16 ml-10 mr-10">
         <h1 className="text-2xl p-1 mt-16 font-semibold text-white text-center">
           Create Exam
         </h1>
@@ -55,8 +55,8 @@ const createExam = () => {
           <div className="flex justify-end mt-3 mr-3">
             <div
               class="[word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer hover:bg-stone-600 hover:border-stone-600
-                    items-center rounded-[16px] border border-stone-500  
-                    bg-stone-500 py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
+                    items-center rounded-[16px] border border-[#8E7970]  
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
             >
               <a href="#">
                 <svg
@@ -77,8 +77,8 @@ const createExam = () => {
             </div>
             <div
               class="[word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer hover:bg-stone-600 hover:border-stone-600
-                    items-center rounded-[16px] border border-stone-500  
-                    bg-stone-500 py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
+                    items-center rounded-[16px] border border-[#8E7970]  
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
             >
               <a href="#">
                 <svg
