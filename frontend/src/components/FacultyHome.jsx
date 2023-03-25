@@ -12,13 +12,13 @@ function classNames(...classes) {
 const FacultyHome = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="w-full h-screen flex items-center bg-slate-900">
+    <div className="w-full h-screen flex items-center bg-[#0F1F38]">
       <Nav />
 
-      <div className="h-2/3 w-3/4 shadow-md shadow-black mt-2 ml-10 bg-sky-900">
+      <div className="h-2/3 w-3/4 shadow-md shadow-black mt-2 ml-10 bg-[#1B4B5A]">
         <Menu as="div" className="relative w-full inline-block text-left">
           <div className="">
-            <Menu.Button className="mt-0.5 justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-stone-500 border border-stone-500 shadow-lg">
+            <Menu.Button className="mt-0.5 justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
               Upcoming Exams
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ const FacultyHome = () => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-stone-500 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
                 <Menu.Item>
                   {({ active }) => (
@@ -74,7 +74,7 @@ const FacultyHome = () => {
         </Menu>
         <Menu as="div" className="mt-2 w-full inline-block text-left">
           <div>
-            <Menu.Button className="justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-stone-500 border border-stone-500 shadow-lg">
+            <Menu.Button className="justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
               Previous Exams
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@ const FacultyHome = () => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-stone-500 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
                 <Menu.Item>
                   {({ active }) => (
@@ -130,8 +130,8 @@ const FacultyHome = () => {
         </Menu>
       </div>
 
-      <div className="flex flex-col w-1/3 h-2/3 shadow-md shadow-black bg-sky-900 mt-2 ml-10 mr-10">
-        <h1 className="text-xl p-1 mt-16- font-semibold text-white text-center">
+      <div className="flex flex-col w-1/3 h-2/3 shadow-md shadow-black bg-[#1B4B5A] mt-2 ml-10 mr-10">
+        <h1 className="text-xl p-1 mt-16 font-semibold text-white text-center">
           Create Exam
         </h1>
         <div className="flex flex-col mt-8 w-full">
@@ -160,8 +160,8 @@ const FacultyHome = () => {
           <div className="flex justify-end mt-3 mr-3">
           <div
                     class="justify-end [word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer 
-                    items-center rounded-[16px] border border-stone-500  
-                    bg-stone-500 py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-sm">
+                    items-center rounded-[16px] border border-[#8E7970] 
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-sm">
             <a href="#">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

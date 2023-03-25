@@ -43,14 +43,14 @@ const examSolving = () => {
   const [isOpen, setIsOpen] = useState(false);
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   const listItems = numbers.map((number) =>
-  <li className="w-12 justify-center [word-wrap: break-word] ml-3 flex h-[32px] items-center rounded-[16px] border border-stone-500 bg-stone-500 hover:bg-stone-600 hover:border-stone-600 
-  bg-[transparent] py-0 px-[12px] text-md mb-2 mr-3 normal-case leading-loose text-white shadow-md">{number}</li>
+  <li className="w-12 justify-center [word-wrap: break-word] ml-3 flex h-[32px] items-center rounded-[16px] border border-[#8E7970] hover:bg-[#8E7976] hover:border-[#8E7976]
+  bg-[#8E7970] py-0 px-[12px] text-md mb-2 mr-3 normal-case leading-loose text-white shadow-md">{number}</li>
 );
   return (
-    <div className="w-full h-screen flex items-center bg-slate-900 ">
+    <div className="w-full h-screen flex items-center bg-[#0F1F38] ">
       <Nav />
       <div className="flex">
-        <div className="overflow-auto flex flex-col w-[325px] h-[325px] justify-center shadow-md shadow-black bg-sky-900 mt-16 ml-8 mr-8">
+        <div className="overflow-auto flex flex-col w-[325px] h-[325px] justify-center shadow-md shadow-black bg-[#1B4B5A] mt-16 ml-8 mr-8">
         <div className="mt-2">
         <Timer timeInSeconds={5}/>
         </div>
@@ -59,12 +59,12 @@ const examSolving = () => {
            {listItems}
         </ul>
         <div className="flex justify-center mt-3 mb-2">
-        <button className="text-white font-semibold p-2 bg-stone-500 w-1/2 rounded-lg shadow-md hover:bg-stone-600 hover:border-stone-600">
+        <button className="text-white font-semibold p-2 bg-[#8E7970] w-1/2 rounded-lg shadow-md hover:[#8E7976] hover:border-[#8E7976]">
             End Exam
         </button>
         </div>
         </div>
-        <div className="flex flex-col w-[700px] h-[500px] shadow-md shadow-black bg-sky-900 mt-16 ml-10 mr-10">
+        <div className="flex flex-col w-[700px] h-[500px] shadow-md shadow-black bg-[#1B4B5A] mt-16 ml-10 mr-10">
           <h1 className="text-2xl p-1 mt-16 font-semibold text-white text-center">
             Exam Name Goes here
           </h1>
@@ -97,8 +97,8 @@ const examSolving = () => {
             <div className="flex justify-end mt-3 mr-3">
               <div
                 class="[word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer hover:bg-stone-600 hover:border-stone-600
-                    items-center rounded-[16px] border border-stone-500  
-                    bg-stone-500 py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
+                    items-center rounded-[16px] border border-[#8E7970]  
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
               >
                 <a href="#">
                   <svg
@@ -119,8 +119,8 @@ const examSolving = () => {
               </div>
               <div
                 class="[word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer hover:bg-stone-600 hover:border-stone-600
-                    items-center rounded-[16px] border border-stone-500  
-                    bg-stone-500 py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
+                    items-center rounded-[16px] border border-[#8E7970] 
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
               >
                 <a href="#">
                   <svg
