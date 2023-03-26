@@ -63,35 +63,42 @@ def register(data: UserModel):
 
 @app.post("/login")
 def login(data: LoginModel):
-    # Checking if a user with the same email already exists
-    user = users.find_one({"email": data.email})
+    try:
+        # Checking if a user with the same email already exists
+        user = users.find_one({"email": data.email})
 
-    # If user not found, then raise a error
-    if user == None:
+        # If user not found, then raise a error
+        if user == None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
+
+        # The user is exists, so verify the password. If correct then return a JWT token containing
+        # 1. email
+        # 2. full_name
+        # 3. role
+        if (verify_hashed_password(data.password, user['password'])):
+            return {
+                "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+            }
+
+        # If the password is incorrect, raise a error
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Password Incorrect")
+    except Exception as e:
+        print("Exception occured: " + str(e))
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
-
-    # The user is exists, so verify the password. If correct then return a JWT token containing
-    # 1. email
-    # 2. full_name
-    # 3. role
-    if (verify_hashed_password(data.password, user['password'])):
-        return {
-            "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
-        }
-
-    # If the password is incorrect, raise a error
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="Password Incorrect")
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
 
 
 @app.get("/protected")
 def protected(data: dict = Depends(decode_token)):
     return data
 
+
 @app.get("/verify")
-def verify(token:str):
+def verify(token: str):
     return decode_token(token=token)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, log_level="info", reload=True)

@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from "react";
-import verifyToken from "../utils/verifyToken";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import FacultyHome from "./FacultyHome";
 import StudHome from "./StudentHome";
 
 export default function Home() {
-	const [role, setRole] = useState(0);
 	const navigate = useNavigate();
+
+	const { user } = useAuth();
+
 	useEffect(() => {
-		const get = async () => {
-			const data = await verifyToken();
+		if (user) {
+			navigate("/");
+		}
+	}, [user]);
 
-			if (!data) navigate("/login");
-			else setRole(data.role);
-		};
-		get();
-	}, []);
-
-	if (role == "student") {
+	if (user.role === "student") {
 		// On Student Login in
 		return <StudHome />;
 	} else {
-		return null;
-		// On Faculty Login in
-		console.log("Faculty Logged in");
+		return <FacultyHome />;
 	}
 }

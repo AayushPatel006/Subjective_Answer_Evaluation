@@ -1,8 +1,6 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect } from "react";
 import LoginImg from "../assets/loginImg2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
-import httpRequest from "../utils/httpRequest";
-import verifyToken from "../utils/verifyToken";
 import useAuth from "../hooks/useAuth";
 
 export default function Login() {

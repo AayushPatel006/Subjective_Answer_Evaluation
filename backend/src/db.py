@@ -3,6 +3,10 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
+
+print("Env " + os.getenv("MONGO_URI"))
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["mini_project"]
 users = db["users"]
+
+# print(users)
