@@ -10,3 +10,8 @@ class ExamModel(BaseModel):
     total_marks: int = 0
     # Status can contain this options: creating, scheduled, ongoing, completed
     status: Optional[str] = "creating"
+
+
+class QuestionModel(BaseModel):
+    exam_ref: str
+    questions: list

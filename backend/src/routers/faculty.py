@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from utils import decode_token
 from db import users, exams
-from models.faculty import ExamModel
+from models.faculty import ExamModel, QuestionModel
 from fastapi import HTTPException, status
 
 
@@ -60,5 +60,7 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
 
-# @router.post("/add_questions")
-# async def add_questions(exam_id: str, questions: list, auth_obj: dict = Depends(decode_token)):
+@router.post("/add_questions")
+async def add_questions(data: QuestionModel, auth_obj: dict = Depends(decode_token)):
+    print(data)
+    return None
