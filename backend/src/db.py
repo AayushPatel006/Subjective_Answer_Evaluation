@@ -8,5 +8,6 @@ print("Env " + os.getenv("MONGO_URI"))
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["mini_project"]
 users = db["users"]
+exams = db["exams"]
 
 # print(users)
