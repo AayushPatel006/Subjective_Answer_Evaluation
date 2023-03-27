@@ -4,6 +4,7 @@ import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
+import notify from "../utils/toast";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 function classNames(...classes) {
@@ -36,8 +37,13 @@ const FacultyHome = () => {
         },
         {
           token: localStorage.getItem("token"),
-        }
+        },
+        true
         );
+
+        if(result.data) {
+          notify()
+        }
       console.log("Result ", result);
   };
 
