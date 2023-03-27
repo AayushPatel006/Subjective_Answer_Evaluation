@@ -4,7 +4,6 @@ from utils import create_token, decode_token, get_hashed_password, verify_hashed
 import uvicorn
 from db import users, exams
 from models.user import UserModel, LoginModel
-from models.exam import ExamModel
 from fastapi.middleware.cors import CORSMiddleware
 from routers import faculty
 app = FastAPI()
