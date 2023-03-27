@@ -41,10 +41,9 @@ const FacultyHome = () => {
         true
         );
 
-        if(result.data) {
-          notify()
+        if(result.data.msg) {
+          notify(result.data.msg,"success");
         }
-      console.log("Result ", result);
   };
 
   return (
