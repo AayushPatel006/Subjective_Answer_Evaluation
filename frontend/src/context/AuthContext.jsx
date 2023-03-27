@@ -39,7 +39,8 @@ export const AuthContextProvider = ({ children }) => {
 				email: email,
 				password: password,
 			},
-			true
+			false,
+			true,
 		);
 
 		if (!error) {
