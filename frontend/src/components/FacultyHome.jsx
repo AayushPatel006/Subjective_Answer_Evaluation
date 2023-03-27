@@ -1,8 +1,9 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment, useLayoutEffect, useState } from "react";
+import React, { Fragment, useLayoutEffect, useState, useRef } from "react";
 import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
+import httpRequest from "../utils/httpRequest";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 function classNames(...classes) {
@@ -11,6 +12,35 @@ function classNames(...classes) {
 
 const FacultyHome = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const exam_name = useRef(null);
+  const exam_start = useRef(null);
+  const exam_end = useRef(null);
+  const total_mark = useRef(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const title = exam_name.current.value;
+    const start_time = exam_start.current.value;
+    const end_time = exam_end.current.value;
+    const marks = total_mark.current.value;
+
+    const result = await httpRequest(
+        "/faculty/create_exam",
+        "post",
+        {
+          title: title,
+          start_time: start_time,
+          end_time: end_time,
+          total_marks: marks,
+          status: "creating"
+        },
+        {
+          token: localStorage.getItem("token"),
+        }
+        );
+      console.log("Result ", result);
+  };
+
   return (
     <div className="w-full h-screen flex items-center bg-[#0F1F38]">
       <Nav />
@@ -135,51 +165,81 @@ const FacultyHome = () => {
           Create Exam
         </h1>
         <div className="flex flex-col mt-8 w-full">
-          <label htmlFor="exam-date" className="flex items-center mt-4">
+          <label htmlFor="exam-name" className="flex items-center mt-4">
             <span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
-              Enter Exam Date:
+              Exam Name:
             </span>
             <input
-              type="date"
-              id="exam-date"
-              name="exam-date"
+              type="text"
+              id="exam-name"
+              name="exam-name"
               className="p-1.5 mr-1 w-48"
+              ref={exam_name}
+              required
             />
           </label>
-          <label htmlFor="exam-date" className="flex items-center mt-4">
+          <label htmlFor="exam-start" className="flex items-center mt-4">
             <span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
-              Enter Exam Duration:
+              Exam start time:
             </span>
             <input
-              type="time"
-              id="exam-date"
-              name="exam-date"
+              type="datetime-local"
+              id="exam-start"
+              name="exam-start"
               className="p-1.5 mr-1 w-48"
+              ref={exam_start}
+              required
+            />
+          </label>
+          <label htmlFor="exam-end" className="flex items-center mt-4">
+            <span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
+              Exam end time:
+            </span>
+            <input
+              type="datetime-local"
+              id="exam-end"
+              name="exam-end"
+              className="p-1.5 mr-1 w-48"
+              ref={exam_end}
+              required
+            />
+          </label>
+          <label htmlFor="exam-marks" className="flex items-center mt-4">
+            <span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
+              Total Marks:
+            </span>
+            <input
+              type="number"
+              id="exam-marks"
+              name="exam-marks"
+              className="p-1.5 mr-1 w-48"
+              min="1"
+              ref={total_mark}
             />
           </label>
           <div className="flex justify-end mt-3 mr-3">
-          <div
-                    class="justify-end [word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer 
+            <div
+              class="justify-end [word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer 
                     items-center rounded-[16px] border border-[#8E7970] 
-                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-sm">
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="3"
-                stroke="currentColor"
-                className="w-3 h-3"
+                    bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-sm"
+            >
+              <a onClick={handleSubmit}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="3"
+                  stroke="currentColor"
+                  className="w-3 h-3"
                 >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
                   />
-              </svg>
-            </a>      
-        </div>
-            
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
