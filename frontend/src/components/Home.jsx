@@ -19,7 +19,7 @@ export default function Home() {
 		// On Student Login in
 		return <StudHome />;
 	} 
-	else if(user && user.role === "faculty") {
+	else if(user && user.role === "teacher") {
 		return <FacultyHome />;
 	}
 }
