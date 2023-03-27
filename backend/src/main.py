@@ -132,9 +132,10 @@ def login(data: LoginModel):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Password Incorrect")
     except Exception as e:
+        print(e)
         print("Exception occured: " + str(e))
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+            status_code=status.HTTP__INTERNA500L_SERVER_ERROR, detail="Internal Server Error")
 
 
 @app.get("/protected")
