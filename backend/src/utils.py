@@ -8,7 +8,7 @@ password_context_instance = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def get_hashed_password(password: str) -> str:
     try:
         return password_context_instance.hash(password)
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Problem Occured while hashing password")
 
@@ -35,6 +35,6 @@ def create_token(obj: dict) -> str:
 def decode_token(token: str) -> dict:
     try:
         return jwt.decode(token, "secret", algorithms=["HS256"])
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Unauthorized")
