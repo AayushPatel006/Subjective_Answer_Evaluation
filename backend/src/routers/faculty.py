@@ -8,7 +8,6 @@ from fastapi import HTTPException, status
 router = APIRouter(
     prefix="/faculty",
     tags=["faculty"],
-    dependencies=[Depends(decode_token)],
     responses={404: {"description": "Not found"}},
 )
 

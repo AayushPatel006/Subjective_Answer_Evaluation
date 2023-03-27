@@ -64,31 +64,28 @@ def register(data: UserModel):
 
 @app.post("/login")
 def login(data: LoginModel):
-    try:
-        # Checking if a user with the same email already exists
-        user = users.find_one({"email": data.email})
+    # Checking if a user with the same email already exists
+    user = users.find_one({"email": data.email})
 
-        # If user not found, then raise a error
-        if user == None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
-
-        # The user is exists, so verify the password. If correct then return a JWT token containing
-        # 1. email
-        # 2. full_name
-        # 3. role
-        if (verify_hashed_password(data.password, user['password'])):
-            return {
-                "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
-            }
-
-        # If the password is incorrect, raise a error
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Password Incorrect")
-    except Exception as e:
-        print("Exception occured: " + str(e))
+    # If user not found, then raise a error
+    print(data)
+    print(user)
+    if user == None:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists")
+
+    # The user is exists, so verify the password. If correct then return a JWT token containing
+    # 1. email
+    # 2. full_name
+    # 3. role
+    if (verify_hashed_password(data.password, user['password'])):
+        return {
+            "token": create_token(dict({"email": user["email"], "full_name": user["full_name"], "role": user["role"]}))
+        }
+
+    # If the password is incorrect, raise a error
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Password Incorrect")
 
 
 @app.get("/protected")
