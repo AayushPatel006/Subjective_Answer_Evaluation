@@ -10,15 +10,16 @@ export default function Home() {
 	const { user } = useAuth();
 
 	useEffect(() => {
-		if (user) {
-			navigate("/");
+		if(!user) {
+			navigate('/login');
 		}
 	}, [user]);
 
-	if (user.role === "student") {
+	if (user && user.role === "student") {
 		// On Student Login in
 		return <StudHome />;
-	} else {
+	} 
+	else if(user && user.role === "faculty") {
 		return <FacultyHome />;
 	}
 }
