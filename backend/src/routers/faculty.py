@@ -4,7 +4,7 @@ from db import users, exams, questions
 from models.faculty import ExamModel, QuestionModel
 from fastapi import HTTPException, status
 from bson.objectid import ObjectId
-
+import json
 
 router = APIRouter(
     prefix="/faculty",
@@ -136,3 +136,13 @@ async def add_questions(index: int, data: QuestionModel, auth_obj: dict = Depend
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Questions can only be added by the teacher who created the exam")
+
+@router.get("/exams")
+async def get_exams(auth_obj: dict = Depends(decode_token)):
+    try:
+        user = users.find_one({"email": auth_obj["email"]})
+        exam_obj = list(exams.find({"created_by": user["_id"]}, { "created_by": 0 }))
+        return json.loads(json.dumps(exam_obj, default=str))
+    except Exception as e:
+        print(e)
+        print("Excepiton occured")
