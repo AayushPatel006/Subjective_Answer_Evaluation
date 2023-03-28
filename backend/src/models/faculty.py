@@ -14,4 +14,4 @@ class ExamModel(BaseModel):
 
 class QuestionModel(BaseModel):
     exam_ref: str
-    questions: list
+    questions: list[dict]

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from utils import decode_token
-from db import users, exams
+from db import users, exams, questions
 from models.faculty import ExamModel, QuestionModel
 from fastapi import HTTPException, status
 
@@ -62,5 +62,35 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
 
 @router.post("/add_questions")
 async def add_questions(data: QuestionModel, auth_obj: dict = Depends(decode_token)):
-    print(data)
-    return None
+    user = users.find_one({"email": auth_obj["email"]})
+    if auth_obj['role'] == "teacher" and user["_id"] == data.created_by:
+
+        # Getting the exam object
+        exam_obj = exams.find_one({"_id": data.exam_ref})
+
+        if exam_obj == None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Exam does not exists")
+
+        # Payload to insert into the database
+        payload = {
+            "exam_ref": data.exam_ref,
+            "questions": data.questions
+        }
+
+        try:
+            res = questions.insert_one(payload)
+            # Updating the exam with the question_ref
+            exams.update_one({"_id": data.exam_ref}, {
+                             "$set": {"question_ref": str(res.inserted_id)}})
+            return {
+                "msg": "Questions added successfully",
+                "question_id": str(res.inserted_id),
+                "ok": True
+            }
+        except Exception:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                detail="Problem occured while creating a user")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Questions can only be added by the teacher who created the exam")
