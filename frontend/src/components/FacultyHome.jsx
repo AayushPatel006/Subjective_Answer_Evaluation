@@ -27,24 +27,45 @@ const FacultyHome = () => {
 
   useEffect(() => {
     const getExam = async () => {
-      const result = await httpRequest("/faculty/exams", "get", false, {
-        "token": localStorage.getItem("token"),
-      }, true);
+      const result = await httpRequest(
+        "/faculty/exams",
+        "get",
+        false,
+        {
+          token: localStorage.getItem("token"),
+        },
+        true
+      );
       // console.log("1");
       updateExams(result.data);
+      // console.log(exams);
     };
     getExam();
-  },[]);
+  }, []);
 
   const RenderExams = (props) => {
     return (
-      <ul>
-      { props.exams.map((value) => {
-        return ( <li>{value['title']}</li>);
-      })}
-      </ul>
-    )
-  }
+      <>
+        {props.exams &&
+          props.exams.map((value, index) => {
+            return (
+              <Menu.Item key={value['_id']}>
+                {({ active }) => {
+                  return (
+                    <a
+                      href="#"
+                      className={classNames("block px-4 py-2 text-sm")}
+                    >
+                      {value["title"]}
+                    </a>
+                  );
+                }}
+              </Menu.Item>
+            );
+          })}
+      </>
+    );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -111,17 +132,7 @@ const FacultyHome = () => {
           >
             <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                       { <RenderExams exams={exams} /> } 
-                    </a>
-                  )}
-                </Menu.Item>
-                
+              <RenderExams exams={exams}/>
               </div>
             </Menu.Items>
           </Transition>
