@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Assess from "../assets/assessment.png";
 import useAuth from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
 	const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Nav = () => {
 		<div className=" w-full absolute top-0 left-0">
 			<div className="md:flex shadow-md justify-between bg-[#1B4B5A] backdrop-blur py-6 md:px-10 px:7">
 				<div className="mx-10 flex font-bold text-1xl items-center font-[Arial] text-white">
+					<Link to="/">
 					<span>
 						<img
 							src={Assess}
@@ -17,6 +19,7 @@ const Nav = () => {
 							className="w-[25px] ht-[25px] ml-6 mx-1 flex"
 						/>
 					</span>
+					</Link>
 					<h3 className="text-white font-semibold mt-1 hover:text-gray-300">
 						Assess
 					</h3>
