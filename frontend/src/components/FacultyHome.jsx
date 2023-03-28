@@ -1,5 +1,11 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment, useLayoutEffect, useState, useRef } from "react";
+import React, {
+  Fragment,
+  useLayoutEffect,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
@@ -13,10 +19,32 @@ function classNames(...classes) {
 
 const FacultyHome = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [exams, updateExams] = useState(null);
   const exam_name = useRef(null);
   const exam_start = useRef(null);
   const exam_end = useRef(null);
   const total_mark = useRef(null);
+
+  useEffect(() => {
+    const getExam = async () => {
+      const result = await httpRequest("/faculty/exams", "get", false, {
+        "token": localStorage.getItem("token"),
+      }, true);
+      // console.log("1");
+      updateExams(result.data);
+    };
+    getExam();
+  },[]);
+
+  const RenderExams = (props) => {
+    return (
+      <ul>
+      { props.exams.map((value) => {
+        return ( <li>{value['title']}</li>);
+      })}
+      </ul>
+    )
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,24 +54,24 @@ const FacultyHome = () => {
     const marks = total_mark.current.value;
 
     const result = await httpRequest(
-        "/faculty/create_exam",
-        "post",
-        {
-          title: title,
-          start_time: start_time,
-          end_time: end_time,
-          total_marks: marks,
-          status: "creating"
-        },
-        {
-          token: localStorage.getItem("token"),
-        },
-        true
-        );
+      "/faculty/create_exam",
+      "post",
+      {
+        title: title,
+        start_time: start_time,
+        end_time: end_time,
+        total_marks: marks,
+        status: "creating",
+      },
+      {
+        token: localStorage.getItem("token"),
+      },
+      true
+    );
 
-        if(result.data.msg) {
-          notify(result.data.msg,"success");
-        }
+    if (result.data.msg) {
+      notify(result.data.msg, "success");
+    }
   };
 
   return (
@@ -89,20 +117,11 @@ const FacultyHome = () => {
                       href="#"
                       className={classNames("block px-4 py-2 text-sm")}
                     >
-                      Exam 1
+                       { <RenderExams exams={exams} /> } 
                     </a>
                   )}
                 </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      Exam 2
-                    </a>
-                  )}
-                </Menu.Item>
+                
               </div>
             </Menu.Items>
           </Transition>
@@ -145,7 +164,7 @@ const FacultyHome = () => {
                       href="#"
                       className={classNames("block px-4 py-2 text-sm")}
                     >
-                      Exam 1
+                      Exam 4
                     </a>
                   )}
                 </Menu.Item>
@@ -155,7 +174,7 @@ const FacultyHome = () => {
                       href="#"
                       className={classNames("block px-4 py-2 text-sm")}
                     >
-                      Exam 2
+                      Exam 5
                     </a>
                   )}
                 </Menu.Item>

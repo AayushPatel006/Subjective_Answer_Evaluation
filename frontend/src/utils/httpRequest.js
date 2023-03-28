@@ -5,7 +5,12 @@ const httpRequest = async (url, type, body, params , showToast) => {
 	try {
 		switch (type) {
 			case "get":
-				return await handleGet(url, body);
+				if(!body) {
+					return await handleGetWithParmas(url, params);
+				}
+				else {
+					return await handleGet(url, body);
+				}
 			case "post":
 				if(params.token) {
 					return await handlePostWithParmas(url, body, params);
@@ -20,7 +25,7 @@ const httpRequest = async (url, type, body, params , showToast) => {
 		}
 	} catch (err) {
 		console.log(err);
-		const { detail } = err.response.data || err.message;
+		const { detail } = err.response?.data || err.message;
 		if (showToast) notify(detail, "error");
 		return { data: false, error: err };
 	}
@@ -37,4 +42,7 @@ const handlePostWithParmas = async(url, body, params) => {
 	return await axiosInstance.post(url, body, { params: params });
 }
 
+const  handleGetWithParmas = async(url, params) => {
+	return await axiosInstance.get(url, { params: params });
+}
 export default httpRequest;
