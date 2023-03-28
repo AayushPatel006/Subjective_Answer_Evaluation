@@ -14,4 +14,6 @@ class ExamModel(BaseModel):
 
 class QuestionModel(BaseModel):
     exam_ref: str
-    questions: list
+    question:str
+    model_answer:str
+    max_marks:int
