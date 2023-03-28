@@ -26,8 +26,9 @@ const Nav = () => {
               md:w-auto md:pl-0 pl-4"
 				>
 					<li className="md:ml-8 text-1xl md:my-0 my-7 mr-5 flex cursor-pointer">
+						
 						<h3 className="text-white font-semibold mt-1 hover:text-gray-300">
-							Sign In
+							{user && user.full_name}
 						</h3>
 						<div
 							class="justify-end [word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer 
