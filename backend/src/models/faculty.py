@@ -9,11 +9,11 @@ class ExamModel(BaseModel):
     end_time: datetime
     total_marks: int = 0
     # Status can contain this options: creating, scheduled, ongoing, completed
-    status: Optional[str] = "creating"
+    status: Optional[str] = "scheduled"
 
 
 class QuestionModel(BaseModel):
     exam_ref: str
-    question:str
-    model_answer:str
-    max_marks:int
+    question: str
+    model_answer: str
+    max_marks: int
