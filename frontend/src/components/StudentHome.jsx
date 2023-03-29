@@ -145,7 +145,7 @@ const StudHome = () => {
         </Menu>
       </div>
 
-      <div className="flex flex-col w-1/3 h-2/3 shadow-md shadow-black bg-[#1B4B5A] mt-2 ml-10 mr-10">
+      <div className="flex flex-col w-1/3 h-2/3 shadow-md shadow-black bg-[#1B4B5A] mt-2 ml-10 mr-10 overflow-hidden">
         <div className="w-full">
           <div class="flex justify-center">
             <div class="mt-0.5 mb-1 xl:w-96">
@@ -188,7 +188,7 @@ const StudHome = () => {
             </h1>
           </div>
           <div >
-            <ul className="bg-transparent shadow-sm text-semibold text-md p-1 text-white" style={{ maxHeight: "340px", overflowY: "auto"}}>
+            <ul className="bg-transparent shadow-sm text-semibold text-md p-1 text-white" style={{overflowY: 'auto', height: 'calc(100% - 50px)'}}>
               {listItems}
             </ul>
           </div>
