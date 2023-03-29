@@ -5,7 +5,7 @@ import uvicorn
 from db import users, exams
 from models.user import UserModel, LoginModel
 from fastapi.middleware.cors import CORSMiddleware
-from routers import faculty
+from routers import faculty,student
 app = FastAPI()
 
 origins = [
@@ -13,6 +13,7 @@ origins = [
 ]
 
 app.include_router(faculty.router)
+app.include_router(student.router)
 
 app.add_middleware(
     CORSMiddleware,

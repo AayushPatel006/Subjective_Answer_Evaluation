@@ -10,5 +10,6 @@ db = client["mini_project"]
 users = db["users"]
 exams = db["exams"]
 questions = db["questions"]
+registrations = db["registrations"]
 
 # print(users)
