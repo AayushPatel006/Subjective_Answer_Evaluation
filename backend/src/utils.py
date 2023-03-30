@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
 import jwt
+from db import users
 
 password_context_instance = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -38,3 +39,10 @@ def decode_token(token: str) -> dict:
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Unauthorized")
+    
+
+async def get_user_obj(email:str) -> dict:
+    try:
+        return users.find_one({"email":email})
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User does not exist")

@@ -5,8 +5,8 @@ from datetime import datetime
 
 class ExamModel(BaseModel):
     title: str
-    start_time: datetime
-    end_time: datetime
+    start_time: int
+    end_time: int
     total_marks: int = 0
     # Status can contain this options: creating, scheduled, ongoing, completed
     status: Optional[str] = "scheduled"
