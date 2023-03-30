@@ -11,5 +11,6 @@ users = db["users"]
 exams = db["exams"]
 questions = db["questions"]
 registrations = db["registrations"]
+attempts = db["attempts"]
 
 # print(users)
