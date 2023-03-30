@@ -1,16 +1,107 @@
 from fastapi import APIRouter, Depends,HTTPException,status
 from utils import decode_token
-from db import registrations,users,exams,questions
+from db import registrations,users,exams,questions,attempts
 import time
 from bson.objectid import ObjectId
 from utils import get_user_obj
 import json
+from models.student import AttemptModel
 
 router = APIRouter(
     prefix="/student",
     tags=["student"],
     responses={404: {"description": "Not found"}},
 )
+
+@router.post("/attempt_exam/{exam_id}")
+async def attempt_exam(exam_id:str,data:AttemptModel,user_obj:str=Depends(decode_token)):
+    prev_attempts = None
+    # Fetching the user id from the email
+    user = await get_user_obj(user_obj["email"])
+
+    # Checking if the exam with provided id exists
+    exam = exams.find_one({"_id":ObjectId(exam_id)})
+
+    # Fetching the question from the database
+    exam_question = questions.find_one({"_id":ObjectId(exam["question_ref"])})
+
+    # If exam does not exist, then raise a error
+    if exam == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam does not exist")
+    
+    # Checking if the user has already registered for the exam
+    existing_registration = registrations.find_one({"student_id":user["_id"],"exam_id":exam["_id"]})
+
+    # If the user has already registered for the exam, then raise a error
+    if existing_registration == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User has not registered for the exam")
+    
+    # Checking if the user has already attempted the exam
+    if existing_registration["attempts_id"] != None:
+        prev_attempts = attempts.find_one({"_id":existing_registration["attempts_id"]})
+        if prev_attempts["attempted"] == True:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User has already attempted the exam")
+    
+    # Checking if the exam has started
+    if exam["start_time"]/1000 >= time.time():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam has not started yet")
+    
+    # Checking if the exam has ended
+    if exam["end_time"]/1000 <= time.time():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam has ended")
+    
+    if prev_attempts == None:
+        if not exam_question:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="No Questions has been added to the exam")
+        if len(exam_question["questions"]) < 1:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="No Questions has been added to the exam")
+        
+        attempts_payload = {
+            "student_ref":user["_id"],
+            "exam_ref":exam_id,
+            "attempted":False,
+            "answers":[{
+                "index":data.index,
+                "answer":data.answer,
+                "marks_obtained":None,
+            }],
+            "attempt_completed_on":None,
+            "total_marks":None,
+        }
+
+        if len(exam_question["questions"]) == len(attempts_payload["answers"]):
+            attempts_payload["attempted"] = True
+            attempts_payload["attempt_completed_on"] = time.time()
+        try:
+            attempt_id = attempts.insert_one(attempts_payload).inserted_id
+            registrations.update_one({"_id":existing_registration["_id"]},{"$set":{"attempts_id":attempt_id}})
+            return {
+                "ok":True,
+                "msg":"Attempted the exam successfully",
+            }
+        except Exception:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while attempting the exam")
+    else:
+        if len(exam_question["questions"]) < len(prev_attempts["answers"])+1:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="All questions have been attempted")
+        prev_attempts["answers"].append({
+            "index":data.index,
+            "answer":data.answer,
+            "marks_obtained":None,
+        })
+        if len(exam_question["questions"]) == len(prev_attempts["answers"]):
+            prev_attempts["attempted"] = True
+            prev_attempts["attempt_completed_on"] = time.time()
+        try:
+            attempts.update_one({"_id":prev_attempts["_id"]},{"$set":{"answers":prev_attempts["answers"]}})
+            return {
+                "ok":True,
+                "msg":"Attempted the exam successfully",
+            }
+        except Exception:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while attempting the exam")
+
+    
 
 @router.post("/register")
 def register(exam_id:str,user_obj:str=Depends(decode_token)):
