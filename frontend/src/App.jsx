@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import FacultyHome from "./components/FacultyHome";
 import CreateQuest from "./components/CreateQuest";
 import ExamSolving from "./components/ExamSolving";
+import ExamCreated from "./components/ExamCreated";
 
 function App() {
 	return (
@@ -39,6 +40,11 @@ function App() {
 						path="/examSolving"
 						element={<ExamSolving />}
 					/>
+						<Route
+							exact
+							path="/examCreated"
+							element={<ExamCreated />}
+						/>
 					<Route
 						exact
 						path="/"
