@@ -5,7 +5,7 @@ from models.faculty import ExamModel, QuestionModel
 from fastapi import HTTPException, status
 from bson.objectid import ObjectId
 import json
-
+from datetime import datetime
 router = APIRouter(
     prefix="/faculty",
     tags=["faculty"],
@@ -31,7 +31,7 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
                 status_code=status.HTTP_400_BAD_REQUEST, detail="End time should be greater than start time")
 
         # Get the duration of the exam in minutes
-        duration = (data.end_time - data.start_time).total_seconds() / 60
+        duration = (data.end_time - data.start_time) / 60_000
 
         # Payload to insert into the database
         payload = {
