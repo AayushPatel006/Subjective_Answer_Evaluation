@@ -112,40 +112,35 @@ async def dashboard(user_obj:str=Depends(decode_token)):
     # Fetching the user id from the email
     user = await get_user_obj(user_obj["email"])
 
-    # Fetching all the exams that the student has registered for
-    not_attempted_exams,upcoming_exams = await get_upcoming_exams(user["_id"])
+    try:
+        # Fetching all the exams that the student has registered for
+        not_attempted_exams,upcoming_exams = await get_upcoming_exams(user["_id"])
 
-    # Fetching all the exams that the student has attempted
-    attempted_exams = await get_attempted_exams(user["_id"])
+        # Fetching all the exams that the student has attempted
+        attempted_exams = await get_attempted_exams(user["_id"])
 
-    # Fetching all the ongoing exams that student has registered for
-    ongoing_exams = await get_ongoing_exams(user["_id"])
+        # Fetching all the ongoing exams that student has registered for
+        ongoing_exams = await get_ongoing_exams(user["_id"])
 
-    # Fetching all the exams that the student has not attempted
-    not_attempted_exams = await get_not_attempted_exams(not_attempted_exams)
+        # Fetching all the exams that the student has not attempted
+        not_attempted_exams = await get_not_attempted_exams(not_attempted_exams)
 
-    
-    print(list(upcoming_exams))
-    print(list(ongoing_exams))
-    print(list(attempted_exams))
-    print(list(not_attempted_exams))
+        
+        print(list(upcoming_exams))
+        print(list(ongoing_exams))
+        print(list(attempted_exams))
+        print(list(not_attempted_exams))
 
-    print()
-    payload = json.dumps({
-        "ok":True,
-        "upcoming_exams":list(upcoming_exams),
-        "ongoing_exams":list(ongoing_exams),
-        "attempted_exams":list(attempted_exams),
-        "not_attempted_exams":list(not_attempted_exams),
-        "msg":"Dashboard"
-    },default=str)
-    
-    return json.loads(payload)
-    # return json.loads(json.dumps({
-    #     "ok":True,
-    #     "upcoming_exams":list(upcoming_exams),
-    #     "ongoing_exams":list(ongoing_exams),
-    #     "attempted_exams":list(attempted_exams),
-    #     "not_attempted_exams":list(not_attempted_exams),
-    #     "msg":"Dashboard"
-    # }))
+        print()
+        payload = json.dumps({
+            "ok":True,
+            "upcoming_exams":list(upcoming_exams),
+            "ongoing_exams":list(ongoing_exams),
+            "attempted_exams":list(attempted_exams),
+            "not_attempted_exams":list(not_attempted_exams),
+        },default=str)
+        
+        return json.loads(payload)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while fetching data for dashboard")
