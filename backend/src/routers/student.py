@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends,HTTPException,status
 from utils import decode_token
-from db import registrations,users,exams
+from db import registrations,users,exams,questions
 import time
 from bson.objectid import ObjectId
 from utils import get_user_obj
 import json
+
 router = APIRouter(
     prefix="/student",
     tags=["student"],
@@ -51,6 +52,51 @@ def register(exam_id:str,user_obj:str=Depends(decode_token)):
     except Exception:
         raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while registering the student")
 
+@router.get("/get_questions/{exam_id}")
+async def get_questions(exam_id:str,user_obj:str=Depends(decode_token)):
+    # Fetching the user id from the email
+    user = await get_user_obj(user_obj["email"])
+
+ 
+    # Checking if the exam with provided id exists
+    exam = exams.find_one({"_id":ObjectId(exam_id)})
+
+    # If exam does not exist, then raise a error
+    if exam == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam does not exist")
+    
+    # Checking if the user has already registered for the exam
+    existing_registration = registrations.find_one({"student_id":user["_id"],"exam_id":exam["_id"]})
+
+    # If the user has already registered for the exam, then raise a error
+    if existing_registration == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User has not registered for the exam")
+    
+    # Checking if the user has already attempted the exam
+    if existing_registration["attempts_id"] != None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User has already attempted the exam")
+    
+    # Checking if the exam has started
+    if exam["start_time"]/1000 > time.time():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam has not started yet")
+    
+    # Checking if the exam has ended
+    if exam["end_time"]/1000 <= time.time():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam has ended")
+    
+    try:
+        
+        # Fetching the questions from the exam
+        all_questions =  questions.find_one({"_id":exam["question_ref"]},{"questions.model_answer":0,"_id":0})
+    except Exception as e:
+        print(e)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while fetching the questions")
+
+    return {
+        "ok":True,
+        "questions":all_questions["questions"],
+        "exam_ref":exam_id
+    }
 
 async def get_attempted_exams(user_id:str):
     '''
