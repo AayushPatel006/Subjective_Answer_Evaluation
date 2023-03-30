@@ -8,6 +8,7 @@ import {
   Link,
   useLocation
 } from "react-router-dom";
+import notify from "../utils/toast";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,6 +16,19 @@ function classNames(...classes) {
 
 const StudHome = () => {
   const [exams, updateExams] = useState(null);
+  const [register, updateRegisterStatus] = useState(false);
+
+  const handleRegister = async (id) => {
+    const result = await httpRequest('/student/register','post',false,{
+      exam_id: id,
+      token: localStorage.getItem("token")
+    },true);
+
+    if (result.data.msg) {
+      notify(result.data.msg, "success");
+      updateRegisterStatus(!register);
+    }
+  }
 
   const lists = {
     exam: ["Exam1", "Exam2", "Exam3", "Exam4", "Exam5", "Exam6","Exam7", "Exam8", "Exam9", "Exam10", "Exam11", "Exam12"],
@@ -50,7 +64,7 @@ const StudHome = () => {
       updateExams(result.data);
     };
     getExam();
-  },[]);
+  },[register]);
 
   const RenderExams = (props) => {
     return (
@@ -61,12 +75,15 @@ const StudHome = () => {
               <Menu.Item key={value['_id']}>
                 {({ active }) => {
                   return (
-                    <Link
-                      to={'/'}
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      {value["title"]}
-                    </Link>
+                    <>
+                      <Link
+                        to={'/'}
+                        className={classNames("block px-4 py-2 text-sm")}
+                      >
+                        {value["title"]}
+                      </Link>
+                      <button onClick={() => {handleRegister(value['_id'])}}>Register</button>
+                    </>
                   );
                 }}
               </Menu.Item>

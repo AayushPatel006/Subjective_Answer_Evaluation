@@ -101,7 +101,23 @@ async def attempt_exam(exam_id:str,data:AttemptModel,user_obj:str=Depends(decode
         except Exception:
             raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while attempting the exam")
 
+def getIds(exam):
+    return exam['exam_id']
     
+@router.get("/get_registered_exam")
+async def register(user_obj:str=Depends(decode_token)):
+    try:
+        user = users.find_one({"email": user_obj["email"]})
+        registeredList = list(registrations.find({"student_id":user['_id']},{"exam_id":1,"_id":0}))
+        registeredList = list(map(getIds,registeredList))
+        registeredExamList = list(exams.find({"_id":{"$in":registeredList}}))
+        print(registeredExamList)
+        return json.loads(json.dumps(registeredExamList, default=str))
+    except Exception as e:
+        print(e)
+        print("Excepiton occured")
+
+
 
 @router.post("/register")
 def register(exam_id:str,user_obj:str=Depends(decode_token)):
