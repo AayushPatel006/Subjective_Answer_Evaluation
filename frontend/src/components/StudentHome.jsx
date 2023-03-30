@@ -17,6 +17,7 @@ function classNames(...classes) {
 const StudHome = () => {
   const [exams, updateExams] = useState(null);
   const [register, updateRegisterStatus] = useState(false);
+  const [registeredExam, updateRegisteredExam] = useState(null);
 
   const handleRegister = async (id) => {
     const result = await httpRequest('/student/register','post',false,{
@@ -63,7 +64,25 @@ const StudHome = () => {
       console.log(result.data);
       updateExams(result.data);
     };
+
+    const getRegisteredExam = async () => {
+      const result = await httpRequest(
+        "/student/get_registered_exam",
+        "get",
+        false,
+        {
+          token: localStorage.getItem("token"),
+        },
+        true
+      );
+      console.log(result.data);
+      updateRegisteredExam(result.data);
+    };
+    
+
     getExam();
+    getRegisteredExam();
+
   },[register]);
 
   const RenderExams = (props) => {
@@ -83,6 +102,32 @@ const StudHome = () => {
                         {value["title"]}
                       </Link>
                       <button onClick={() => {handleRegister(value['_id'])}}>Register</button>
+                    </>
+                  );
+                }}
+              </Menu.Item>
+            );
+          })}
+      </>
+    );
+  };
+  
+  const RegisteredExams = (props) => {
+    return (
+      <>
+        {props.registeredExam &&
+          props.registeredExam.map((value, index) => {
+            return (
+              <Menu.Item key={value['_id']}>
+                {({ active }) => {
+                  return (
+                    <>
+                      <Link
+                        to={'/'}
+                        className={classNames("block px-4 py-2 text-sm")}
+                      >
+                        {value["title"]}
+                      </Link>
                     </>
                   );
                 }}
@@ -130,26 +175,7 @@ const StudHome = () => {
           >
             <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      Exam 1
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      Exam 2
-                    </a>
-                  )}
-                </Menu.Item>
+                <RegisteredExams registeredExam={registeredExam}/>
               </div>
             </Menu.Items>
           </Transition>
