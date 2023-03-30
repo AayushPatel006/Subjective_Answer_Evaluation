@@ -9,6 +9,11 @@ import React, {
 import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link,
+  useLocation
+} from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import notify from "../utils/toast";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -20,6 +25,7 @@ function classNames(...classes) {
 const FacultyHome = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [exams, updateExams] = useState(null);
+  const [ examUpdateStatus, updateExamStatus ] = useState(false);
   const exam_name = useRef(null);
   const exam_start = useRef(null);
   const exam_end = useRef(null);
@@ -36,12 +42,11 @@ const FacultyHome = () => {
         },
         true
       );
-      // console.log("1");
+      console.log(result.data);
       updateExams(result.data);
-      // console.log(exams);
     };
     getExam();
-  }, []);
+  }, [examUpdateStatus]);
 
   const RenderExams = (props) => {
     return (
@@ -52,12 +57,12 @@ const FacultyHome = () => {
               <Menu.Item key={value['_id']}>
                 {({ active }) => {
                   return (
-                    <a
-                      href="#"
+                    <Link
+                      to={'/createQuest?examName='+value['title']+'&examRef='+value['_id']}
                       className={classNames("block px-4 py-2 text-sm")}
                     >
                       {value["title"]}
-                    </a>
+                    </Link>
                   );
                 }}
               </Menu.Item>
@@ -92,6 +97,7 @@ const FacultyHome = () => {
 
     if (result.data.msg) {
       notify(result.data.msg, "success");
+      updateExamStatus(!examUpdateStatus);
     }
   };
 
