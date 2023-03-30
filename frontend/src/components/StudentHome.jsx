@@ -1,13 +1,21 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Nav from "./Nav";
 import useAuth from "../hooks/useAuth";
+import httpRequest from "../utils/httpRequest";
+import {
+  BrowserRouter as Router,
+  Link,
+  useLocation
+} from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const StudHome = () => {
+  const [exams, updateExams] = useState(null);
+
   const lists = {
     exam: ["Exam1", "Exam2", "Exam3", "Exam4", "Exam5", "Exam6","Exam7", "Exam8", "Exam9", "Exam10", "Exam11", "Exam12"],
     score: ["90", "90", "90", "90", "90", "90","90", "90", "90", "90", "90", "90"],
@@ -26,6 +34,48 @@ const StudHome = () => {
   ));
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    const getExam = async () => {
+      const result = await httpRequest(
+        "/student/all_exams",
+        "get",
+        false,
+        {
+          token: localStorage.getItem("token"),
+        },
+        true
+      );
+      console.log(result.data);
+      updateExams(result.data);
+    };
+    getExam();
+  },[]);
+
+  const RenderExams = (props) => {
+    return (
+      <>
+        {props.exams &&
+          props.exams.map((value, index) => {
+            return (
+              <Menu.Item key={value['_id']}>
+                {({ active }) => {
+                  return (
+                    <Link
+                      to={'/'}
+                      className={classNames("block px-4 py-2 text-sm")}
+                    >
+                      {value["title"]}
+                    </Link>
+                  );
+                }}
+              </Menu.Item>
+            );
+          })}
+      </>
+    );
+  };
+
   return (
     <div className="w-full h-screen flex items-center bg-[#0F1F38]">
       <Nav />
@@ -34,7 +84,7 @@ const StudHome = () => {
         <Menu as="div" className="relative w-full inline-block text-left">
           <div className="">
             <Menu.Button className="mt-0.5 justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
-              Upcoming Exams
+              Registered Exams
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5 ml-2  mt-0.5"
@@ -90,7 +140,7 @@ const StudHome = () => {
         <Menu as="div" className="mt-2 w-full inline-block text-left">
           <div>
             <Menu.Button className="justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
-              Current Exams
+              All Exams
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5 ml-2 mt-0.5"
@@ -119,26 +169,7 @@ const StudHome = () => {
           >
             <Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      Exam 1
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames("block px-4 py-2 text-sm")}
-                    >
-                      Exam 2
-                    </a>
-                  )}
-                </Menu.Item>
+                <RenderExams exams={exams}/>
               </div>
             </Menu.Items>
           </Transition>

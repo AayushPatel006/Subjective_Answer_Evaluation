@@ -233,6 +233,17 @@ async def get_ongoing_exams(user_id:str):
 
     return list(ongoing_exams)
 
+@router.get("/all_exams")
+async def get_exam(user_obj:str=Depends(decode_token)):
+    try:
+        user = users.find_one({"email": user_obj["email"]})
+        exam_obj = list(exams.find())
+        return json.loads(json.dumps(exam_obj, default=str))
+    except Exception as e:
+        print(e)
+        print("Excepiton occured")
+
+
 @router.get("/dashboard")
 async def dashboard(user_obj:str=Depends(decode_token)):
     '''
