@@ -84,13 +84,11 @@ async def get_questions(exam_id:str,user_obj:str=Depends(decode_token)):
     if exam["end_time"]/1000 <= time.time():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam has ended")
     
-    try:
+    
         
-        # Fetching the questions from the exam
-        all_questions =  questions.find_one({"_id":exam["question_ref"]},{"questions.model_answer":0,"_id":0})
-    except Exception as e:
-        print(e)
-        raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while fetching the questions")
+    # Fetching the questions from the exam
+    all_questions =  questions.find_one({"_id":exam["question_ref"]},{"questions.model_answer":0,"_id":0})
+    
 
     return {
         "ok":True,
