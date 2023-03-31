@@ -123,7 +123,7 @@ const StudHome = () => {
                   return (
                     <>
                       <Link
-                        to={'/'}
+                        to={'/examSolving?examName='+value['title']+'&examId='+value['_id']}
                         className={classNames("block px-4 py-2 text-sm")}
                       >
                         {value["title"]}

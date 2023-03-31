@@ -75,9 +75,10 @@ const FacultyHome = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const title = exam_name.current.value;
-    const start_time = exam_start.current.value;
-    const end_time = exam_end.current.value;
+    const start_time = new Date(exam_start.current.value).valueOf();
+    const end_time = new Date(exam_end.current.value).valueOf();
     const marks = total_mark.current.value;
+    
 
     const result = await httpRequest(
       "/faculty/create_exam",
