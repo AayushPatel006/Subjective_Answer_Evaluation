@@ -9,6 +9,7 @@ import FacultyHome from "./components/FacultyHome";
 import CreateQuest from "./components/CreateQuest";
 import ExamSolving from "./components/ExamSolving";
 import ExamCreated from "./components/ExamCreated";
+import ExamAttempted from "./components/ExamAttempted";
 
 function App() {
 	return (
@@ -40,11 +41,16 @@ function App() {
 						path="/examSolving"
 						element={<ExamSolving />}
 					/>
-						<Route
-							exact
-							path="/examCreated"
-							element={<ExamCreated />}
-						/>
+					<Route
+						exact
+						path="/examCreated"
+						element={<ExamCreated />}
+					/>
+					<Route
+						exact
+						path="/examAttempted"
+						element={<ExamAttempted />}
+					/>
 					<Route
 						exact
 						path="/"
