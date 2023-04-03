@@ -61,11 +61,33 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
 
+@router.get('/get_question/{index}')
+async def get_question(index: int, exam_id: str, auth_obj: dict = Depends(decode_token)):
+    try:
+        user = users.find_one({"email": auth_obj["email"]})
+        result = questions.find_one({"exam_ref": exam_id})
+        result = list(result['questions'])
+        isQuestionPresent = False
+        for question in result:
+            if (question['index'] == index):
+                isQuestionPresent = True
+                return json.loads(json.dumps(question, default=str))
+
+        if (isQuestionPresent == False):
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                detail="question is not present")
+
+    except Exception as e:
+        print(e)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                            detail="user did not found")
+
+
 @router.post("/add_questions/{index}")
 async def add_questions(index: int, data: QuestionModel, auth_obj: dict = Depends(decode_token)):
     user = users.find_one({"email": auth_obj["email"]})
     exam_obj = exams.find_one({"_id": ObjectId(data.exam_ref)})
-    if auth_obj['role'] == "teacher" and exam_obj != None and  user["_id"] == exam_obj["created_by"]:
+    if auth_obj['role'] == "teacher" and exam_obj != None and user["_id"] == exam_obj["created_by"]:
         # Getting the exam object
         if exam_obj == None:
             raise HTTPException(
@@ -137,11 +159,13 @@ async def add_questions(index: int, data: QuestionModel, auth_obj: dict = Depend
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Questions can only be added by the teacher who created the exam")
 
+
 @router.get("/exams")
 async def get_exams(auth_obj: dict = Depends(decode_token)):
     try:
         user = users.find_one({"email": auth_obj["email"]})
-        exam_obj = list(exams.find({"created_by": user["_id"]}, { "created_by": 0 }))
+        exam_obj = list(exams.find(
+            {"created_by": user["_id"]}, {"created_by": 0}))
         return json.loads(json.dumps(exam_obj, default=str))
     except Exception as e:
         print(e)
