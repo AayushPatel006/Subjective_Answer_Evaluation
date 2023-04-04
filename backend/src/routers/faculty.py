@@ -126,14 +126,28 @@ async def add_questions(index: int, data: QuestionModel, auth_obj: dict = Depend
         else:
             questions_obj = questions.find_one(
                 {"_id": ObjectId(exam_obj["question_ref"])})
-            questions_arr = questions_obj["questions"]
-            payload = {
-                "index": index,
-                "question": data.question,
-                "model_answer": data.model_answer,
-                "max_marks": data.max_marks
-            }
-            questions_arr.append(payload)
+            questions_arr = list(questions_obj["questions"])
+            isQuestionPresent = False
+            for i in range(len(questions_arr)):
+                if (index == int(questions_arr[i]["index"])):
+                    isQuestionPresent = True
+                    print("update question")
+                    questions_arr[i] = {
+                        "index": index,
+                        "question": data.question,
+                        "model_answer": data.model_answer,
+                        "max_marks": data.max_marks
+                    }
+            if (not isQuestionPresent):
+                payload = {
+                    "index": index,
+                    "question": data.question,
+                    "model_answer": data.model_answer,
+                    "max_marks": data.max_marks
+                }
+
+                questions_arr.append(payload)
+
             try:
                 questions_obj["questions"] = questions_arr
                 questions.update_one(
