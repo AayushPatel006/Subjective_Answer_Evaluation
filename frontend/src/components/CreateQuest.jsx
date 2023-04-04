@@ -1,5 +1,11 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
+import React, {
+	Fragment,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
@@ -21,13 +27,37 @@ function useQuery() {
 const createExam = () => {
 	let query = useQuery();
 	const [index, updateIndex] = useState(1);
+	const allQusetions = useRef(false);
 	const question = useRef("");
 	const modelAnswer = useRef("");
 
+	useEffect(() => {
+		const fetchAllQustions = async () => {
+			const result = await httpRequest(
+				"/faculty/get_all_questions",
+				"get",
+				false,
+				{
+					exam_id: query.get("examRef"),
+					token: localStorage.getItem("token"),
+				},
+				true
+			);
+			allQusetions.current = result?.data;
+			getCurrentQuestion();
+		};
+		fetchAllQustions();
+	}, []);
+
 	const addQuestion = async (event) => {
 		event.preventDefault();
-		console.log(question.current.value);
-		console.log(modelAnswer.current.value);
+		allQusetions.current = allQusetions.current.map((quest) => {
+			if (index == quest["index"]) {
+				quest["question"] = question.current.value;
+				quest["model_answer"] = modelAnswer.current.value;
+			}
+			return quest;
+		});
 		const result = await httpRequest(
 			"/faculty/add_questions/" + index,
 			"post",
@@ -46,29 +76,26 @@ const createExam = () => {
 		console.log(result);
 		if (result.data.msg) {
 			notify(result.data.msg, "success");
-			updateIndex(index + 1);
+		}
+	};
+
+	const getCurrentQuestion = () => {
+		let currentQuestion = allQusetions.current;
+		currentQuestion = currentQuestion.filter((question) => {
+			return question["index"] === index;
+		});
+		if (currentQuestion[0]) {
+			question.current.value = currentQuestion[0]["question"];
+			modelAnswer.current.value = currentQuestion[0]["model_answer"];
+		} else {
 			question.current.value = "";
 			modelAnswer.current.value = "";
 		}
 	};
 
-	const getCurrentQuestion = async () => {
-		let requestUrl = "/faculty/get_question/" + index;
-		console.log(requestUrl);
-		const result = await httpRequest(
-			requestUrl,
-			"get",
-			{
-				exam_id: query.get("examRef"),
-				token: localStorage.getItem("token"),
-			},
-			false,
-			true
-		);
-		console.log(result, "result");
-	};
-
-	getCurrentQuestion();
+	if (allQusetions.current) {
+		getCurrentQuestion();
+	}
 
 	return (
 		<div className="w-full h-screen flex items-center bg-[#0F1F38] justify-center">
@@ -104,7 +131,9 @@ const createExam = () => {
 					</label>
 					<a
 						onClick={() => {
-							index >= 0 ?? updateIndex(index - 1);
+							if (index > 1) {
+								updateIndex(index - 1);
+							}
 						}}
 					>
 						<div

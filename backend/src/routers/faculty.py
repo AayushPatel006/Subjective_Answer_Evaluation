@@ -61,22 +61,13 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
 
-@router.get('/get_question/{index}')
-async def get_question(index: int, exam_id: str, auth_obj: dict = Depends(decode_token)):
+@router.get('/get_all_questions')
+async def get_question(exam_id: str, auth_obj: dict = Depends(decode_token)):
     try:
         user = users.find_one({"email": auth_obj["email"]})
         result = questions.find_one({"exam_ref": exam_id})
         result = list(result['questions'])
-        isQuestionPresent = False
-        for question in result:
-            if (question['index'] == index):
-                isQuestionPresent = True
-                return json.loads(json.dumps(question, default=str))
-
-        if (isQuestionPresent == False):
-            raise HTTPException(status.HTTP_400_BAD_REQUEST,
-                                detail="question is not present")
-
+        return json.loads(json.dumps(result, default=str))
     except Exception as e:
         print(e)
         raise HTTPException(status.HTTP_400_BAD_REQUEST,
