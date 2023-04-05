@@ -82,7 +82,7 @@ async def attempt_exam(exam_id:str,data:AttemptModel,user_obj:str=Depends(decode
         except Exception:
             raise HTTPException(status.HTTP_400_BAD_REQUEST,detail="Problem occured while attempting the exam")
     else:
-        if len(exam_question["questions"]) < len(prev_attempts["answers"])+1:
+        if len(exam_question["questions"]) == len(prev_attempts["answers"]):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="All questions have been attempted")
         prev_attempts["answers"].append({
             "index":data.index,
@@ -93,7 +93,7 @@ async def attempt_exam(exam_id:str,data:AttemptModel,user_obj:str=Depends(decode
             prev_attempts["attempted"] = True
             prev_attempts["attempt_completed_on"] = time.time()
         try:
-            attempts.update_one({"_id":prev_attempts["_id"]},{"$set":{"answers":prev_attempts["answers"]}})
+            attempts.update_one({"_id":prev_attempts["_id"]},{"$set":{"answers":prev_attempts["answers"],"attempted":prev_attempts["attempted"],"attempt_completed_on":prev_attempts["attempt_completed_on"]}})
             return {
                 "ok":True,
                 "msg":"Attempted the exam successfully",
