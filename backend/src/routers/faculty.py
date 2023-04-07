@@ -5,9 +5,8 @@ from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from db import exams, questions, users
-# from main import scheduler
 from models.faculty import ExamModel, QuestionModel
-from utils import decode_token
+from utils import decode_token, evaluate, scheduler
 
 router = APIRouter(
     prefix="/faculty",
@@ -50,17 +49,15 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
 
         try:
             res = exams.insert_one(payload)
-            # utc_date = datetime.datetime.utcfromtimestamp(data.end_time / 1000)
-            # job_id = scheduler.add_job(func, 
-            #                            'date', 
-            #                            run_date=utc_date, 
-            #                            name=f'Exam {data.title} with id {str(res.inserted_id)} = {datetime.datetime.fromtimestamp(data.end_time/1000).strftime("%d / %m / %Y - %H-%M-%S")} ',
-            #                            args=(str(res.inserted_id)))
+            utc_date = datetime.datetime.fromtimestamp(data.end_time / 1000)
             
+            job = scheduler.add_job(evaluate, "date", run_date=utc_date, 
+                                    name=f'Exam {data.title} with id {str(res.inserted_id)}',
+                                    args=(str(res.inserted_id),))
             return {
                 "msg": "Exam created successfully",
                 "exam_id": str(res.inserted_id),
-                # "job_id":job_id.id,
+                "job_id":job.id,
                 "ok": True
             }
         except Exception:

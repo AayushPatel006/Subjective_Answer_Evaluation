@@ -1,17 +1,24 @@
 import jwt
+import numpy as np
 from apscheduler.schedulers.background import BackgroundScheduler
 from bson.objectid import ObjectId
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
+from sentence_transformers import SentenceTransformer, util
+from summarizer import Summarizer, TransformerSummarizer
 
-from db import attempts, users,questions
+from db import attempts, exams, questions, users
 
 password_context_instance = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 scheduler = BackgroundScheduler()
+attempt_scheduler = BackgroundScheduler()
+bert_model = Summarizer()
+model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
 if not scheduler.running: 
     scheduler.start()
+    attempt_scheduler.start()
 
 def evaluate_attempt(attempt_id:str):
     '''
@@ -38,13 +45,31 @@ def evaluate_attempt(attempt_id:str):
         for answer in answers_list:
             answer_map[answer["index"]] = answer
         
+        print("Question map",question_map)
+        print("Answer map",answer_map)
         total_marks = 0
         for index in question_map:
+            
             # Here the ml model will be integrated to evaluate the answer
-            if question_map[index]["answer"] == answer_map[index]["answer"]:
-                answer_map[index]["marks_obtained"] = question_map[index]["marks"]
-                total_marks += question_map[index]["marks"]
+            summary1 = ''.join(bert_model(question_map[index]["model_answer"], min_length=100))
+            summary2 = ''.join(bert_model(answer_map[index]["answer"], min_length=100))
 
+            # encode sentences to get their embeddings
+            embedding1 = model.encode(summary1, convert_to_tensor=True)
+            embedding2 = model.encode(summary2, convert_to_tensor=True)
+
+            # compute similarity scores of two embeddings
+            cosine_scores = util.pytorch_cos_sim(embedding1, embedding2)
+            score = cosine_scores.item() * question_map[index]["max_marks"]
+            total_marks += score
+            answer_map[index]["marks_obtained"] = score
+            
+
+        print()
+        print(answer_map.values())
+        print()
+        print(total_marks)
+        print()
         attempt_obj["answers"] = list(answer_map.values())
         attempt_obj["total_marks"] = total_marks
 
@@ -61,7 +86,7 @@ def evaluate_attempt(attempt_id:str):
         )
         
     except Exception as e:
-        print(e)
+        print("Error occured",e)
     
 
 def evaluate(exam_id:str):
@@ -73,21 +98,31 @@ def evaluate(exam_id:str):
     print("Evaluating exam with id: " + exam_id)
 
     # Getting all the attempts for the exam
-    attempts_obj = attempts.find({"exam_ref": exam_id})
-    print(list(attempts_obj))
-    print()
-    print()
-    for attempt in list(attempts_obj):
-        print(attempt)
-        scheduler.add_job(
+    attempts_obj = list(attempts.find({"exam_ref": exam_id}))
+   
+    
+    for i in attempts_obj:
+        print(i)
+        attempt_scheduler.add_job(
                     evaluate_attempt,
                     None, 
-                    args=(str(attempt["_id"]),),
-                    id=str(attempt["_id"]),
-                    name="Evaluating attempt with id: " + str(attempt["_id"]),
+                    args=(str(i["_id"]),),
+                    id=str(i["_id"]),
+                    name="Evaluating attempt with id: " + str(i["_id"]),
                 )
-
-
+    
+    exam_obj = exams.find_one({"_id": ObjectId(exam_id)})
+    exam_obj["status"] = "completed"
+    exams.update_one(
+        { 
+            "_id": ObjectId(exam_id)
+        },
+        {
+            "$set": {
+                "status": "completed"
+            }
+        }   
+    )
 
     
 
