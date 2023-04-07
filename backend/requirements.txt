@@ -5,7 +5,7 @@ autopep8==2.0.2
 PyJWT==2.6.0
 passlib[bcrypt]==1.7.4
 passlib==1.7.4
-python-dotenv==1.0.0
+python-dotenv
 apscheduler==3.10.1
 transformers==4.27.4
 bert-extractive-summarizer==0.10.1
