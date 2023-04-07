@@ -1,12 +1,22 @@
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi import FastAPI
-from utils import create_token, decode_token, get_hashed_password, verify_hashed_password
+import datetime
+from datetime import timedelta
+
 import uvicorn
-from db import users, exams
-from models.user import UserModel, LoginModel
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from routers import faculty,student
+
+from db import exams, users
+from models.user import LoginModel, UserModel
+from routers import faculty, student
+from utils import (create_token, decode_token, get_hashed_password, scheduler,
+                   verify_hashed_password, evaluate)
+
 app = FastAPI()
+# scheduler = BackgroundScheduler()
+
+# if not scheduler.running: 
+#     scheduler.start()
+
 
 origins = [
     "http://localhost:5173"
@@ -24,14 +34,51 @@ app.add_middleware(
 )
 
 
+def func():
+    users.insert_one({"name": "New temp user 1"})
+
+
 @app.get("/")
 def read_root():
+    # utc_date = datetime.datetime.fromtimestamp(1680875400000 / 1000)
+            # job_id = scheduler.add_job(func, 
+            #                            'date', 
+            #                            run_date=utc_date, 
+            #                            name=f'Exam {data.title} with id {str(res.inserted_id)} = {datetime.datetime.fromtimestamp(data.end_time/1000).strftime("%d / %m / %Y - %H-%M-%S")} ',
+            #                            args=(str(res.inserted_id)))
+    # job = scheduler.add_job(evaluate, "date", run_date=utc_date, 
+    #                         name="Exam custom with id 6430194a86287a56949e340e",
+    #                         args=("6430194a86287a56949e340e",))
+    # d = datetime.datetime.now(tz=datetime.timezone.utc) + timedelta(seconds=1)
+    # 642c68f72bfcfe3bf5ddb9c4
+
+    # a = scheduler.add_job(func, 'date', run_date=d,name="Inserting temp user")
+    # a = scheduler.add_job(evaluate, "date", run_date=d, name="Evaluating exam", args=("642c684e2bfcfe3bf5ddb9c1",))
+    # return {"Hello": job.id, "next_run_time": str(job.trigger)}
     return {"Hello": "World"}
+
+@app.get("/{id}")
+def get_status(id: str):
+    print(id)
+    job = scheduler.get_job(id)
+    print(job)
+    try:
+        if job:
+            return {
+                "next_run_time": str(job.trigger),
+                "name": job.name,
+                "id": job.id,
+                "pending": job.pending
+            }
+        else:
+            return {"msg": "Job not found"}
+    except Exception as e:
+        print(e)
+        return {"msg": "Exception: Job not found"}
 
 
 @app.post("/register")
 def register(data: UserModel):
-
     print(data)
 
     # Checking if a user with the same email already exists

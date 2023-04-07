@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends
-from utils import decode_token
-from db import users, exams, questions
-from models.faculty import ExamModel, QuestionModel
-from fastapi import HTTPException, status
-from bson.objectid import ObjectId
+import datetime
 import json
-from datetime import datetime
+
+from bson.objectid import ObjectId
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from db import exams, questions, users
+from models.faculty import ExamModel, QuestionModel
+from utils import decode_token, evaluate, scheduler
+
 router = APIRouter(
     prefix="/faculty",
     tags=["faculty"],
@@ -47,14 +49,20 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
 
         try:
             res = exams.insert_one(payload)
+            utc_date = datetime.datetime.fromtimestamp(data.end_time / 1000)
+            
+            job = scheduler.add_job(evaluate, "date", run_date=utc_date, 
+                                    name=f'Exam {data.title} with id {str(res.inserted_id)}',
+                                    args=(str(res.inserted_id),))
             return {
                 "msg": "Exam created successfully",
                 "exam_id": str(res.inserted_id),
+                "job_id":job.id,
                 "ok": True
             }
         except Exception:
             raise HTTPException(status.HTTP_400_BAD_REQUEST,
-                                detail="Problem occured while creating a user")
+                                detail="Problem occured while creating a exam")
 
     else:
         raise HTTPException(

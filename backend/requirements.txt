@@ -6,3 +6,8 @@ PyJWT==2.6.0
 passlib[bcrypt]==1.7.4
 passlib==1.7.4
 python-dotenv==1.0.0
+apscheduler==3.10.1
+transformers==4.27.4
+bert-extractive-summarizer==0.10.1
+spacy==3.5.1
+sentence_transformers==2.2.2
