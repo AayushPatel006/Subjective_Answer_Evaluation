@@ -72,6 +72,7 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
 @router.get('/get_all_questions')
 async def get_question(exam_id: str, auth_obj: dict = Depends(decode_token)):
     try:
+        print(auth_obj)
         user = users.find_one({"email": auth_obj["email"]})
         result = questions.find_one({"exam_ref": exam_id})
         result = list(result['questions'])
@@ -79,7 +80,7 @@ async def get_question(exam_id: str, auth_obj: dict = Depends(decode_token)):
     except Exception as e:
         print(e)
         raise HTTPException(status.HTTP_400_BAD_REQUEST,
-                            detail="user did not found")
+                            detail="An error occured")
 
 
 @router.post("/add_questions/{index}")
