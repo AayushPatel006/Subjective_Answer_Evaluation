@@ -57,6 +57,25 @@ def read_root():
     # return {"Hello": job.id, "next_run_time": str(job.trigger)}
     return {"Hello": "World"}
 
+# @app.get("/{id}")
+# def get_status(id: str):
+#     print(id)
+#     job = scheduler.get_job(id)
+#     print(job)
+#     try:
+#         if job:
+#             return {
+#                 "next_run_time": str(job.trigger),
+#                 "name": job.name,
+#                 "id": job.id,
+#                 "pending": job.pending
+#             }
+#         else:
+#             return {"msg": "Job not found"}
+#     except Exception as e:
+#         print(e)
+#         return {"msg": "Exception: Job not found"}
+
 
 @app.post("/register")
 def register(data: UserModel):
