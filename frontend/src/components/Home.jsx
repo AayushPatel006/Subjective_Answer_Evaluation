@@ -13,7 +13,6 @@ export default function Home() {
 		if (!user) {
 			navigate("/login");
 		}
-		console.log(user);
 	}, [user]);
 
 	if (user && user.role === "student") {
