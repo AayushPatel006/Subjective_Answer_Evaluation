@@ -70,6 +70,7 @@ const examSolving = () => {
 				},
 				true
 			);
+			console.log(result, "result");
 			updateQuestion(result.data.questions);
 			updateLength(result.data.questions.length);
 			console.log(questions.current, "1");

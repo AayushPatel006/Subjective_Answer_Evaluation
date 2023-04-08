@@ -31,33 +31,31 @@ const createExam = () => {
 	const question = useRef("");
 	const modelAnswer = useRef("");
 
-	useEffect(() => {
-		const fetchAllQustions = async () => {
-			const result = await httpRequest(
-				"/faculty/get_all_questions",
-				"get",
-				false,
-				{
-					exam_id: query.get("examRef"),
-					token: localStorage.getItem("token"),
-				},
-				true
-			);
+	const fetchAllQustions = async () => {
+		const result = await httpRequest(
+			"/faculty/get_all_questions",
+			"get",
+			false,
+			{
+				exam_id: query.get("examRef"),
+				token: localStorage.getItem("token"),
+			},
+			true
+		);
+		console.log(result);
+		if (result.data != false) {
 			allQusetions.current = result?.data;
 			getCurrentQuestion();
-		};
+		}
+	};
+
+	useEffect(() => {
 		fetchAllQustions();
 	}, []);
 
 	const addQuestion = async (event) => {
 		event.preventDefault();
-		allQusetions.current = allQusetions.current.map((quest) => {
-			if (index == quest["index"]) {
-				quest["question"] = question.current.value;
-				quest["model_answer"] = modelAnswer.current.value;
-			}
-			return quest;
-		});
+
 		const result = await httpRequest(
 			"/faculty/add_questions/" + index,
 			"post",
@@ -77,22 +75,37 @@ const createExam = () => {
 		if (result.data.msg) {
 			notify(result.data.msg, "success");
 		}
-	};
 
-	const getCurrentQuestion = () => {
-		let currentQuestion = allQusetions.current;
-		currentQuestion = currentQuestion.filter((question) => {
-			return question["index"] === index;
-		});
-		if (currentQuestion[0]) {
-			question.current.value = currentQuestion[0]["question"];
-			modelAnswer.current.value = currentQuestion[0]["model_answer"];
+		if (allQusetions.current.data != "false") {
+			allQusetions.current = allQusetions.current.map((quest) => {
+				if (index == quest["index"]) {
+					quest["question"] = question.current.value;
+					quest["model_answer"] = modelAnswer.current.value;
+				}
+				return quest;
+			});
 		} else {
-			question.current.value = "";
-			modelAnswer.current.value = "";
+			fetchAllQustions();
 		}
 	};
 
+	const getCurrentQuestion = () => {
+		if (allQusetions.current) {
+			let currentQuestion = allQusetions.current;
+			if (currentQuestion.data != "false") {
+				currentQuestion = currentQuestion.filter((question) => {
+					return question["index"] === index;
+				});
+				if (currentQuestion[0]) {
+					question.current.value = currentQuestion[0]["question"];
+					modelAnswer.current.value = currentQuestion[0]["model_answer"];
+				} else {
+					question.current.value = "";
+					modelAnswer.current.value = "";
+				}
+			}
+		}
+	};
 	if (allQusetions.current) {
 		getCurrentQuestion();
 	}

@@ -50,14 +50,14 @@ async def create_exam(data: ExamModel, auth_obj: dict = Depends(decode_token)):
         try:
             res = exams.insert_one(payload)
             utc_date = datetime.datetime.fromtimestamp(data.end_time / 1000)
-            
-            job = scheduler.add_job(evaluate, "date", run_date=utc_date, 
+
+            job = scheduler.add_job(evaluate, "date", run_date=utc_date,
                                     name=f'Exam {data.title} with id {str(res.inserted_id)}',
                                     args=(str(res.inserted_id),))
             return {
                 "msg": "Exam created successfully",
                 "exam_id": str(res.inserted_id),
-                "job_id":job.id,
+                "job_id": job.id,
                 "ok": True
             }
         except Exception:
@@ -75,6 +75,8 @@ async def get_question(exam_id: str, auth_obj: dict = Depends(decode_token)):
         print(auth_obj)
         user = users.find_one({"email": auth_obj["email"]})
         result = questions.find_one({"exam_ref": exam_id})
+        if (result == None):
+            return json.loads(json.dumps({"data": "false"}, default=str))
         result = list(result['questions'])
         return json.loads(json.dumps(result, default=str))
     except Exception as e:
