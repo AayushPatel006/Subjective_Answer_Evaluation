@@ -56,6 +56,11 @@ function App() {
 						path="/"
 						element={<Home />}
 					/>
+					<Route
+						exact
+						path="*"
+						element={<Home />}
+					/>
 				</Routes>
 			</Router>
 
