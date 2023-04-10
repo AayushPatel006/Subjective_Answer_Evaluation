@@ -142,6 +142,20 @@ const createExam = () => {
 							ref={modelAnswer}
 						/>
 					</label>
+					<label htmlFor="exam-date" className="flex items-center mt-4">
+						<span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
+							Enter Marks:
+						</span>
+						<input
+							type="text"
+							id="exam-date"
+							name="exam-date"
+							className="p-1.5 rounded-md w-full mr-1 shadow-md"
+							ref={modelAnswer}
+						/>
+					</label>
+					
+					<div className="flex justify-end mt-3 mr-3">
 					<a
 						onClick={() => {
 							if (index > 1) {
@@ -155,22 +169,21 @@ const createExam = () => {
                     bg-[#8E7970] py-0 px-[12px] text-md font-semibold normal-case leading-loose text-white shadow-md"
 						>
 							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="3"
-								stroke="currentColor"
-								className="w-3 h-3"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
-								/>
-							</svg>
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="3"
+										stroke="currentColor"
+										className="w-3 h-3"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
+										/>
+									</svg>
 						</div>
 					</a>
-					<div className="flex justify-end mt-3 mr-3">
 						<a onClick={addQuestion}>
 							<div
 								className="[word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer hover:bg-stone-600 hover:border-stone-600
