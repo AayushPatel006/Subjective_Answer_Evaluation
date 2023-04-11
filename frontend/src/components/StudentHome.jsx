@@ -117,27 +117,30 @@ const StudHome = () => {
 				{props.exams &&
 					props.exams.map((value, index) => {
 						return (
-							<Menu.Item key={value["_id"]}>
+							<div className="flex justify-between mb-1">
+							<Menu.Item key={value["_id"]} >
 								{({ active }) => {
 									return (
 										<>
 											<Link
 												to={"/"}
 												className={classNames("block px-4 py-2 text-sm")}
-											>
+												>
 												{value["title"]}
 											</Link>
 											<button
+												className="p-1 rounded-xl w-50 border border-white border-dashed"
 												onClick={() => {
 													handleRegister(value["_id"]);
 												}}
-											>
+												>
 												Register
 											</button>
 										</>
 									);
 								}}
 							</Menu.Item>
+							</div>
 						);
 					})}
 			</>
@@ -210,7 +213,7 @@ const StudHome = () => {
 						leaveFrom="transform opacity-100 scale-100"
 						leaveTo="transform opacity-0 scale-95"
 					>
-						<Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+						<Menu.Items className="flex overflow-y-auto h-[150px] text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
 							<div className="py-1">
 								<RegisteredExams registeredExam={registeredExam} />
 							</div>
@@ -247,7 +250,7 @@ const StudHome = () => {
 						leaveFrom="transform opacity-100 scale-100"
 						leaveTo="transform opacity-0 scale-95"
 					>
-						<Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+						<Menu.Items className="flex h-[150px] overflow-y-auto text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
 							<div className="py-1">
 								<RenderExams exams={exams} />
 							</div>
@@ -259,11 +262,11 @@ const StudHome = () => {
 			<div className="flex flex-col w-1/3 h-2/3 shadow-md shadow-black bg-[#1B4B5A] mt-2 ml-10 mr-10 overflow-hidden">
 				<div className="w-full">
 					<div className="flex justify-center">
-						<div className="mt-0.5 mb-1 xl:w-96">
+						<div className="mt-0.5 mb-1">
 							<div className="relative mb-1 flex w-full flex-wrap items-stretch">
 								<input
 									type="search"
-									className="relative m-0 -mr-px block w-[1%] min-w-0 flex-auto border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-black outline-none transition duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none "
+									className="relative m-0  block w-[1%] min-w-0 flex-auto border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-black outline-none transition duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none "
 									placeholder="Search"
 									aria-label="Search"
 									aria-describedby="button-addon1"
