@@ -16,11 +16,12 @@ attempt_scheduler = BackgroundScheduler()
 bert_model = Summarizer()
 model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
-if not scheduler.running: 
+if not scheduler.running:
     scheduler.start()
     attempt_scheduler.start()
 
-def evaluate_attempt(attempt_id:str):
+
+def evaluate_attempt(attempt_id: str):
     '''
         This function will be called by the scheduler to evaluate the attempt
         Will be schedule on the end time of the exam
@@ -31,8 +32,11 @@ def evaluate_attempt(attempt_id:str):
 
         # Getting all the attempts for the exam
         attempt_obj = attempts.find_one({"_id": ObjectId(attempt_id)})
-        question_obj = questions.find_one({"exam_ref": attempt_obj["exam_ref"]})
-
+        question_obj = questions.find_one(
+            {"exam_ref": attempt_obj["exam_ref"]})
+        print(attempt_obj)
+        print()
+        print(question_obj)
         question_map = dict()
         answer_map = dict()
 
@@ -41,29 +45,39 @@ def evaluate_attempt(attempt_id:str):
 
         for question in questions_list:
             question_map[question["index"]] = question
-        
+
         for answer in answers_list:
             answer_map[answer["index"]] = answer
-        
-        print("Question map",question_map)
-        print("Answer map",answer_map)
+
+        print("Question map", question_map)
+        print("Answer map", answer_map)
         total_marks = 0
         for index in question_map:
-            
+
             # Here the ml model will be integrated to evaluate the answer
-            summary1 = ''.join(bert_model(question_map[index]["model_answer"], min_length=100))
-            summary2 = ''.join(bert_model(answer_map[index]["answer"], min_length=100))
+            summary1 = ''.join(bert_model(
+                question_map[index]["model_answer"], min_length=100))
+            summary2 = ''.join(bert_model(
+                answer_map[index]["answer"], min_length=100))
 
             # encode sentences to get their embeddings
-            embedding1 = model.encode(summary1, convert_to_tensor=True)
-            embedding2 = model.encode(summary2, convert_to_tensor=True)
+            # embedding1 = model.encode(summary1, convert_to_tensor=True)
+            # embedding2 = model.encode(summary2, convert_to_tensor=True)
+
+            embedding1 = model.encode(
+                question_map[index]["model_answer"], convert_to_tensor=True)
+            embedding2 = model.encode(
+                answer_map[index]["answer"], convert_to_tensor=True)
 
             # compute similarity scores of two embeddings
             cosine_scores = util.pytorch_cos_sim(embedding1, embedding2)
+
+            # cosine_scores = util.pytorch_cos_sim(
+            #     question_map[index]["model_answer"], answer_map[index]["answer"])
+            print(cosine_scores.item())
             score = cosine_scores.item() * question_map[index]["max_marks"]
             total_marks += score
             answer_map[index]["marks_obtained"] = score
-            
 
         print()
         print(answer_map.values())
@@ -72,7 +86,7 @@ def evaluate_attempt(attempt_id:str):
         print()
         attempt_obj["answers"] = list(answer_map.values())
         attempt_obj["total_marks"] = total_marks
-
+        print("asd")
         attempts.update_one(
             {
                 "_id": ObjectId(attempt_obj["_id"])
@@ -84,12 +98,12 @@ def evaluate_attempt(attempt_id:str):
                 }
             }
         )
-        
-    except Exception as e:
-        print("Error occured",e)
-    
 
-def evaluate(exam_id:str):
+    except Exception as e:
+        print("Error occured", e)
+
+
+def evaluate(exam_id: str):
     '''
         This function will be called by the scheduler to evaluate the exam
         Will be schedule on the end time of the exam
@@ -99,32 +113,29 @@ def evaluate(exam_id:str):
 
     # Getting all the attempts for the exam
     attempts_obj = list(attempts.find({"exam_ref": exam_id}))
-   
-    
+
     for i in attempts_obj:
         print(i)
         attempt_scheduler.add_job(
-                    evaluate_attempt,
-                    None, 
-                    args=(str(i["_id"]),),
-                    id=str(i["_id"]),
-                    name="Evaluating attempt with id: " + str(i["_id"]),
-                )
-    
+            evaluate_attempt,
+            None,
+            args=(str(i["_id"]),),
+            id=str(i["_id"]),
+            name="Evaluating attempt with id: " + str(i["_id"]),
+        )
+
     exam_obj = exams.find_one({"_id": ObjectId(exam_id)})
     exam_obj["status"] = "completed"
     exams.update_one(
-        { 
+        {
             "_id": ObjectId(exam_id)
         },
         {
             "$set": {
                 "status": "completed"
             }
-        }   
+        }
     )
-
-    
 
 
 def get_hashed_password(password: str) -> str:
@@ -160,10 +171,11 @@ def decode_token(token: str) -> dict:
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Unauthorized")
-    
 
-async def get_user_obj(email:str) -> dict:
+
+async def get_user_obj(email: str) -> dict:
     try:
-        return users.find_one({"email":email})
+        return users.find_one({"email": email})
     except Exception:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User does not exist")
