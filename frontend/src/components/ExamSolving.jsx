@@ -125,6 +125,13 @@ const examSolving = () => {
 		}
 	};
 
+	const getmarks = () =>  {
+		const [q] = props.questions.filter((question) => {
+			return question.index === index;
+		});
+		return q['max_marks'];
+	}
+
 	return (
 		<div className="w-full h-screen flex items-center bg-[#0F1F38] ">
 			<Nav />
@@ -147,6 +154,7 @@ const examSolving = () => {
 						{query.get("examName")}
 					</h1>
 					<div className="flex flex-col mt-8 w-full">
+						<div className="flex justify-between">
 						<label htmlFor="exam-date" className="items-center">
 							<span className="ml-1 w-48 mr-1 justify-between text-md font-semibold text-white">
 								Question {index} :
@@ -156,10 +164,16 @@ const examSolving = () => {
 								id="exam-date"
 								name="exam-date"
 								className="w-full mr-1 shadow-md text-white ml-1 mr-1 mt-1"
-							>
+								>
 								<Question questions={questions} />
 							</p>
 						</label>
+						<label htmlFor="exam-date" className="items-center">
+							<span className="ml-1 w-48 mr-2 justify-between text-md font-semibold text-white">
+								{/* {getmarks} */}
+							</span>
+						</label>
+						</div>
 						<label htmlFor="exam-date" className="flex items-center mt-4">
 							<span className="ml-1 w-20 mr-1 text-md font-semibold text-white">
 								Answer:
