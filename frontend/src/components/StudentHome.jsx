@@ -117,27 +117,30 @@ const StudHome = () => {
 				{props.exams &&
 					props.exams.map((value, index) => {
 						return (
-							<Menu.Item key={value["_id"]}>
-								{({ active }) => {
-									return (
-										<>
-											<Link
-												to={"/"}
-												className={classNames("block px-4 py-2 text-sm")}
-											>
-												{value["title"]}
-											</Link>
-											<button
-												onClick={() => {
-													handleRegister(value["_id"]);
-												}}
-											>
-												Register
-											</button>
-										</>
-									);
-								}}
-							</Menu.Item>
+							<div className="flex justify-between mb-1">
+								<Menu.Item key={value["_id"]}>
+									{({ active }) => {
+										return (
+											<>
+												<Link
+													to={"/"}
+													className={classNames("block px-4 py-2 text-sm")}
+												>
+													{value["title"]}
+												</Link>
+												<button
+													className="border rounded-xl p-1 border-white border-dashed"
+													onClick={() => {
+														handleRegister(value["_id"]);
+													}}
+												>
+													Register
+												</button>
+											</>
+										);
+									}}
+								</Menu.Item>
+							</div>
 						);
 					})}
 			</>
@@ -282,9 +285,9 @@ const StudHome = () => {
 										className="h-5 w-5"
 									>
 										<path
-											fill-rule="evenodd"
+											fillRule="evenodd"
 											d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-											clip-rule="evenodd"
+											clipRule="evenodd"
 										/>
 									</svg>
 								</button>
