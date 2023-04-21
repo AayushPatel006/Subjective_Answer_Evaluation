@@ -14,7 +14,7 @@ from utils import (create_token, decode_token, get_hashed_password, scheduler,
 app = FastAPI()
 # scheduler = BackgroundScheduler()
 
-# if not scheduler.running: 
+# if not scheduler.running:
 #     scheduler.start()
 
 
@@ -41,19 +41,20 @@ def func():
 @app.get("/")
 def read_root():
     # utc_date = datetime.datetime.fromtimestamp(1680875400000 / 1000)
-            # job_id = scheduler.add_job(func, 
-            #                            'date', 
-            #                            run_date=utc_date, 
-            #                            name=f'Exam {data.title} with id {str(res.inserted_id)} = {datetime.datetime.fromtimestamp(data.end_time/1000).strftime("%d / %m / %Y - %H-%M-%S")} ',
-            #                            args=(str(res.inserted_id)))
-    # job = scheduler.add_job(evaluate, "date", run_date=utc_date, 
+    # job_id = scheduler.add_job(func,
+    #                            'date',
+    #                            run_date=utc_date,
+    #                            name=f'Exam {data.title} with id {str(res.inserted_id)} = {datetime.datetime.fromtimestamp(data.end_time/1000).strftime("%d / %m / %Y - %H-%M-%S")} ',
+    #                            args=(str(res.inserted_id)))
+    # job = scheduler.add_job(evaluate, "date", run_date=utc_date,
     #                         name="Exam custom with id 6430194a86287a56949e340e",
     #                         args=("6430194a86287a56949e340e",))
     # d = datetime.datetime.now(tz=datetime.timezone.utc) + timedelta(seconds=1)
     # 642c68f72bfcfe3bf5ddb9c4
 
     # a = scheduler.add_job(func, 'date', run_date=d,name="Inserting temp user")
-    # a = scheduler.add_job(evaluate, "date", run_date=d, name="Evaluating exam", args=("642c684e2bfcfe3bf5ddb9c1",))
+    a = scheduler.add_job(evaluate, name="Evaluating exam",
+                          args=('64364954e0d97f9a2211184b',))
     # return {"Hello": job.id, "next_run_time": str(job.trigger)}
     return {"Hello": "World"}
 

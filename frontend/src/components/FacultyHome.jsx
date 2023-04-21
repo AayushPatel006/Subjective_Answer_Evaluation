@@ -25,7 +25,6 @@ const FacultyHome = () => {
 	const exam_name = useRef(null);
 	const exam_start = useRef(null);
 	const exam_end = useRef(null);
-	const total_mark = useRef(null);
 
 	useEffect(() => {
 		const getExam = async () => {
@@ -78,7 +77,6 @@ const FacultyHome = () => {
 		const title = exam_name.current.value;
 		const start_time = new Date(exam_start.current.value).valueOf();
 		const end_time = new Date(exam_end.current.value).valueOf();
-		const marks = total_mark.current.value;
 
 		const result = await httpRequest(
 			"/faculty/create_exam",
@@ -87,7 +85,7 @@ const FacultyHome = () => {
 				title: title,
 				start_time: start_time,
 				end_time: end_time,
-				total_marks: marks,
+				total_marks: 0,
 				status: "creating",
 			},
 			{
@@ -246,7 +244,7 @@ const FacultyHome = () => {
 							required
 						/>
 					</label>
-					<label htmlFor="exam-marks" className="flex items-center mt-4">
+					{/* <label htmlFor="exam-marks" className="flex items-center mt-4">
 						<span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
 							Total Marks:
 						</span>
@@ -258,7 +256,7 @@ const FacultyHome = () => {
 							min="1"
 							ref={total_mark}
 						/>
-					</label>
+					</label> */}
 					<div className="flex justify-end mt-3 mr-3">
 						<div
 							className="justify-end [word-wrap: break-word] ml-2 flex h-[32px] cursor-pointer 
@@ -270,13 +268,13 @@ const FacultyHome = () => {
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
 									viewBox="0 0 24 24"
-									stroke-width="3"
+									strokeWidth="3"
 									stroke="currentColor"
 									className="w-3 h-3"
 								>
 									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
+										strokeLinecap="round"
+										strokeLinejoin="round"
 										d="M12 4.5v15m7.5-7.5h-15"
 									/>
 								</svg>
