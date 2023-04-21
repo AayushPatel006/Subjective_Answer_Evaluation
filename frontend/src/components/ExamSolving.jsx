@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import verifyToken from "../utils/verifyToken";
 import Nav from "./Nav";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import notify from "../utils/toast";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -58,6 +58,7 @@ const examSolving = () => {
 	const [questions, updateQuestion] = useState([]);
 	const [questionFetched, updateQuestionFetch] = useState(false);
 	const answer = useRef("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getExamQuestions = async () => {
@@ -70,6 +71,14 @@ const examSolving = () => {
 				},
 				true
 			);
+			if (result?.data == false) {
+				navigate("/");
+				notify(result.error.response.data.detalis, "error");
+			}
+			if (result.data.questions.length == 0) {
+				navigate("/");
+				notify("No questions are set", "error");
+			}
 			console.log(result, "result");
 			updateQuestion(result.data.questions);
 			updateLength(result.data.questions.length);
@@ -119,9 +128,15 @@ const examSolving = () => {
 		);
 		console.log(result);
 		if (result.data.msg) {
-			updateIndex(index + 1);
-			answer.current.value = "";
-			notify("Answer Submitterd", "success");
+			if (index + 1 > length) {
+				navigate("/");
+				notify("Answer Submitterd", "success");
+				notify("Exam finished", "success");
+			} else {
+				updateIndex(index + 1);
+				answer.current.value = "";
+				notify("Answer Submitterd", "success");
+			}
 		}
 	};
 

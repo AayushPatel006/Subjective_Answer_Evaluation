@@ -53,8 +53,8 @@ def read_root():
     # 642c68f72bfcfe3bf5ddb9c4
 
     # a = scheduler.add_job(func, 'date', run_date=d,name="Inserting temp user")
-    # a = scheduler.add_job(evaluate, name="Evaluating exam",
-    #                       args=('6434e03a6021080eafadc146',))
+    a = scheduler.add_job(evaluate, name="Evaluating exam",
+                          args=('64364954e0d97f9a2211184b',))
     # return {"Hello": job.id, "next_run_time": str(job.trigger)}
     return {"Hello": "World"}
 

@@ -75,7 +75,18 @@ def evaluate_attempt(attempt_id: str):
             # cosine_scores = util.pytorch_cos_sim(
             #     question_map[index]["model_answer"], answer_map[index]["answer"])
             print(cosine_scores.item())
-            score = cosine_scores.item() * question_map[index]["max_marks"]
+            probablity = cosine_scores.item()
+            if (probablity <= 0.5):
+                probablity = 0
+            elif (probablity <= 0.625):
+                probablity = 0.25
+            elif (probablity <= 0.75):
+                probablity = 0.5
+            elif (probablity <= 0.875):
+                probablity = 0.75
+            else:
+                probablity = 1
+            score = probablity * question_map[index]["max_marks"]
             total_marks += score
             answer_map[index]["marks_obtained"] = score
 
