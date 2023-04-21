@@ -10,6 +10,7 @@ import CreateQuest from "./components/CreateQuest";
 import ExamSolving from "./components/ExamSolving";
 import ExamCreated from "./components/ExamCreated";
 import ExamAttempted from "./components/ExamAttempted";
+import FacultyMarks from "./components/FacultyMarks";
 
 function App() {
 	return (
@@ -50,6 +51,11 @@ function App() {
 						exact
 						path="/examAttempted"
 						element={<ExamAttempted />}
+					/>
+					<Route
+						exact
+						path="/facultyMarks"
+						element={<FacultyMarks/>}
 					/>
 					<Route
 						exact
