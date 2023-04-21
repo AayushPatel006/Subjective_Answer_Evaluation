@@ -14,6 +14,7 @@ const StudHome = () => {
 	const [exams, updateExams] = useState(null);
 	const [register, updateRegisterStatus] = useState(false);
 	const [registeredExam, updateRegisteredExam] = useState(null);
+	const [examScore, updateExamScore] = useState(false);
 
 	const handleRegister = async (id) => {
 		const result = await httpRequest(
@@ -32,49 +33,18 @@ const StudHome = () => {
 			updateRegisterStatus(!register);
 		}
 	};
-
-	const lists = {
-		exam: [
-			"Exam1",
-			"Exam2",
-			"Exam3",
-			"Exam4",
-			"Exam5",
-			"Exam6",
-			"Exam7",
-			"Exam8",
-			"Exam9",
-			"Exam10",
-			"Exam11",
-			"Exam12",
-		],
-		score: [
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-		],
-	};
-	const listItems = lists.exam.map((exam, index) => (
-		<li className="flex justify-between">
-			<h1 className="mt-0.5 ml-2 text-white font-semibold">{exam}</h1>
-			<div
-				className="justify-center [word-wrap: break-word] mr-2 mb-1 flex h-[32px] cursor-pointer 
-				  items-center rounded-[16px] border border-white border-dashed w-[50px]
-				  bg-[transparent] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-sm"
-			>
-				{lists.score[index]}
-			</div>
-		</li>
-	));
+	// const listItems = examScore.exam.map((exam, index) => (
+	// 	<li className="flex justify-between">
+	// 		<h1 className="mt-0.5 ml-2 text-white font-semibold">{exam["title"]}</h1>
+	// 		<div
+	// 			className="justify-center [word-wrap: break-word] mr-2 mb-1 flex h-[32px] cursor-pointer
+	// 			  items-center rounded-[16px] border border-white border-dashed w-[50px]
+	// 			  bg-[transparent] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-sm"
+	// 		>
+	// 			{}
+	// 		</div>
+	// 	</li>
+	// ));
 
 	const { user } = useAuth();
 
@@ -89,7 +59,7 @@ const StudHome = () => {
 				},
 				true
 			);
-			console.log(result.data);
+			// console.log(result.data);
 			updateExams(result.data);
 		};
 
@@ -103,10 +73,27 @@ const StudHome = () => {
 				},
 				true
 			);
-			console.log(result.data);
+
+			// console.log(result.data);
 			updateRegisteredExam(result.data);
 		};
-
+		const getExamScore = async () => {
+			const result = await httpRequest(
+				"/student/score",
+				"get",
+				false,
+				{
+					token: localStorage.getItem("token"),
+				},
+				true
+			);
+			if (result.data) {
+				updateExamScore(result.data);
+			} else {
+				notify("No exams appered yet", "success");
+			}
+		};
+		getExamScore();
 		getExam();
 		getRegisteredExam();
 	}, [register]);
@@ -117,7 +104,7 @@ const StudHome = () => {
 				{props.exams &&
 					props.exams.map((value, index) => {
 						return (
-							<div className="flex justify-between mb-1">
+							<div className="flex justify-between mb-1" key={index}>
 								<Menu.Item key={value["_id"]}>
 									{({ active }) => {
 										return (
@@ -306,7 +293,21 @@ const StudHome = () => {
 							className="bg-transparent shadow-sm text-semibold text-md p-1 text-white"
 							style={{ overflowY: "auto", height: "calc(100% - 50px)" }}
 						>
-							{listItems}
+							{examScore &&
+								examScore.map((exam, index) => (
+									<li className="flex justify-between" key={index}>
+										<h1 className="mt-0.5 ml-2 text-white font-semibold">
+											{exam["exam"]["title"]}
+										</h1>
+										<div
+											className="justify-center [word-wrap: break-word] mr-2 mb-1 flex h-[32px] cursor-pointer 
+				  items-center rounded-[16px] border border-white border-dashed w-[50px]
+				  bg-[transparent] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-sm"
+										>
+											{exam["marks_obtained"]}
+										</div>
+									</li>
+								))}
 						</ul>
 					</div>
 				</div>
