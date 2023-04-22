@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import Nav from "./Nav";
 import useAuth from "../hooks/useAuth";
 import httpRequest from "../utils/httpRequest";
-import { BrowserRouter as Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import notify from "../utils/toast";
 
 function classNames(...classes) {
@@ -288,13 +288,22 @@ const StudHome = () => {
 						</div>
 					</div>
 				</div>
-				<div className=" flex flex-col justify-center">
+				<div
+					className=" flex flex-col justify-center"
+					style={{
+						height: "100%",
+					}}
+				>
 					<div className="mb-2 rounded-sm w-full bg-transparent mt-1 p-1 items-center shadow-md">
 						<h1 className="ml-2 text-lg text-white font-semibold">
 							Previous Exams:
 						</h1>
 					</div>
-					<div>
+					<div
+						style={{
+							height: "100%",
+						}}
+					>
 						<ul
 							className="bg-transparent shadow-sm text-semibold text-md p-1 text-white"
 							style={{ overflowY: "auto", height: "calc(100% - 50px)" }}
