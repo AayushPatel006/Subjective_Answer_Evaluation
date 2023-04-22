@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import Nav from "./Nav";
 import useAuth from "../hooks/useAuth";
 import httpRequest from "../utils/httpRequest";
-import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import notify from "../utils/toast";
 
 function classNames(...classes) {
@@ -104,17 +104,17 @@ const StudHome = () => {
 				{props.exams &&
 					props.exams.map((value, index) => {
 						return (
-							<div className="flex justify-between mb-1" key={index}>
+							<div
+								className="flex justify-between mb-1"
+								key={index}
+							>
 								<Menu.Item key={value["_id"]}>
 									{({ active }) => {
 										return (
 											<>
-												<Link
-													to={"/"}
-													className={classNames("block px-4 py-2 text-sm")}
-												>
+												<div className={classNames("block px-4 py-2 text-sm")}>
 													{value["title"]}
-												</Link>
+												</div>
 												<button
 													className="border rounded-xl p-1 border-white border-dashed"
 													onClick={() => {
@@ -170,7 +170,10 @@ const StudHome = () => {
 			<Nav />
 
 			<div className="h-2/3 w-3/4 shadow-md shadow-black mt-2 ml-10 bg-[#1B4B5A]">
-				<Menu as="div" className="relative w-full inline-block text-left">
+				<Menu
+					as="div"
+					className="relative w-full inline-block text-left"
+				>
 					<div className="">
 						<Menu.Button className="mt-0.5 justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
 							Registered Exams
@@ -207,7 +210,10 @@ const StudHome = () => {
 						</Menu.Items>
 					</Transition>
 				</Menu>
-				<Menu as="div" className="mt-2 w-full inline-block text-left">
+				<Menu
+					as="div"
+					className="mt-2 w-full inline-block text-left"
+				>
 					<div>
 						<Menu.Button className="justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
 							All Exams
@@ -282,20 +288,32 @@ const StudHome = () => {
 						</div>
 					</div>
 				</div>
-				<div className=" flex flex-col justify-center">
+				<div
+					className=" flex flex-col justify-center"
+					style={{
+						height: "100%",
+					}}
+				>
 					<div className="mb-2 rounded-sm w-full bg-transparent mt-1 p-1 items-center shadow-md">
 						<h1 className="ml-2 text-lg text-white font-semibold">
 							Previous Exams:
 						</h1>
 					</div>
-					<div>
+					<div
+						style={{
+							height: "100%",
+						}}
+					>
 						<ul
 							className="bg-transparent shadow-sm text-semibold text-md p-1 text-white"
 							style={{ overflowY: "auto", height: "calc(100% - 50px)" }}
 						>
 							{examScore &&
 								examScore.map((exam, index) => (
-									<li className="flex justify-between" key={index}>
+									<li
+										className="flex justify-between"
+										key={index}
+									>
 										<h1 className="mt-0.5 ml-2 text-white font-semibold">
 											{exam["exam"]["title"]}
 										</h1>
