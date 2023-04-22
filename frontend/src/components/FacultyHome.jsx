@@ -43,35 +43,6 @@ const FacultyHome = () => {
 		getExam();
 	}, [examUpdateStatus]);
 
-	const RenderExams = (props) => {
-		return (
-			<>
-				{props.exams &&
-					props.exams.map((value, index) => {
-						return (
-							<Menu.Item key={value["_id"]}>
-								{({ active }) => {
-									return (
-										<Link
-											to={
-												"/createQuest?examName=" +
-												value["title"] +
-												"&examRef=" +
-												value["_id"]
-											}
-											className={classNames("block px-4 py-2 text-sm")}
-										>
-											{value["title"]}
-										</Link>
-									);
-								}}
-							</Menu.Item>
-						);
-					})}
-			</>
-		);
-	};
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const title = exam_name.current.value;
@@ -105,7 +76,10 @@ const FacultyHome = () => {
 			<Nav />
 
 			<div className="h-2/3 w-3/4 shadow-md shadow-black mt-2 ml-10 bg-[#1B4B5A]">
-				<Menu as="div" className="relative w-full inline-block text-left">
+				<Menu
+					as="div"
+					className="relative w-full inline-block text-left"
+				>
 					<div className="">
 						<Menu.Button className="mt-0.5 justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
 							My Exams
@@ -136,13 +110,21 @@ const FacultyHome = () => {
 						leaveTo="transform opacity-0 scale-95"
 					>
 						<Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-							<div className="py-1">
+							<div
+								style={{
+									width: "100%",
+								}}
+								className="py-1"
+							>
 								<RenderExams exams={exams} />
 							</div>
 						</Menu.Items>
 					</Transition>
 				</Menu>
-				<Menu as="div" className="mt-2 w-full inline-block text-left">
+				<Menu
+					as="div"
+					className="mt-2 w-full inline-block text-left"
+				>
 					<div>
 						<Menu.Button className="justify-between inline-flex w-full px-4 py-2 text-md font-semibold text-white bg-[#8E7970] border border-[#8E7970] shadow-lg">
 							Previous Exams
@@ -205,7 +187,10 @@ const FacultyHome = () => {
 					Create Exam
 				</h1>
 				<div className="flex flex-col mt-8 w-full">
-					<label htmlFor="exam-name" className="flex items-center mt-4">
+					<label
+						htmlFor="exam-name"
+						className="flex items-center mt-4"
+					>
 						<span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
 							Exam Name:
 						</span>
@@ -218,7 +203,10 @@ const FacultyHome = () => {
 							required
 						/>
 					</label>
-					<label htmlFor="exam-start" className="flex items-center mt-4">
+					<label
+						htmlFor="exam-start"
+						className="flex items-center mt-4"
+					>
 						<span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
 							Exam start time:
 						</span>
@@ -231,7 +219,10 @@ const FacultyHome = () => {
 							required
 						/>
 					</label>
-					<label htmlFor="exam-end" className="flex items-center mt-4">
+					<label
+						htmlFor="exam-end"
+						className="flex items-center mt-4"
+					>
 						<span className="ml-1 w-48 mr-1 text-md font-semibold text-white">
 							Exam end time:
 						</span>
@@ -287,4 +278,65 @@ const FacultyHome = () => {
 	);
 };
 
+const RenderExams = (props) => {
+	return (
+		<>
+			{props.exams &&
+				props.exams.map((value, index) => {
+					return (
+						<Menu.Item key={value["_id"]}>
+							{({ active }) => {
+								return (
+									<div
+										style={{
+											display: "flex",
+											alignItems: "center",
+											justifyContent: "space-between",
+										}}
+										className="m-1"
+									>
+										<div className={classNames("block px-4 py-2 text-sm")}>
+											{value["title"]}
+										</div>
+										<div
+											style={{
+												display: "flex",
+												alignItems: "center",
+												gap: "0.5rem",
+											}}
+											className="px-4"
+										>
+											<Link
+												to={
+													"/createQuest?examName=" +
+													value["title"] +
+													"&examRef=" +
+													value["_id"]
+												}
+												className="border rounded-xl p-1 border-white border-dashed"
+											>
+												Edit questions
+											</Link>
+
+											<Link
+												to={
+													"/examDetails?examName=" +
+													value["title"] +
+													"&examRef=" +
+													value["_id"]
+												}
+												className="border rounded-xl p-1 border-white border-dashed"
+											>
+												View Scores
+											</Link>
+										</div>
+									</div>
+								);
+							}}
+						</Menu.Item>
+					);
+				})}
+		</>
+	);
+};
 export default FacultyHome;

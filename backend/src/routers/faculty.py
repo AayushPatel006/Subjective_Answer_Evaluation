@@ -4,7 +4,7 @@ import json
 from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from db import exams, questions, users
+from db import exams, questions, users,attempts
 from models.faculty import ExamModel, QuestionModel
 from utils import decode_token, evaluate, scheduler
 
@@ -186,3 +186,41 @@ async def get_exams(auth_obj: dict = Depends(decode_token)):
     except Exception as e:
         print(e)
         print("Excepiton occured")
+
+
+@router.get("/exam_details/{exam_id}")
+async def exam_details(exam_id:str,auth_obj: dict = Depends(decode_token)):
+    # try:
+    payload = {}
+    user  =  users.find_one({"email":auth_obj["email"]})
+
+    if user == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User does not exists")
+    print(user)
+    exam_obj =  exams.find_one({"_id":ObjectId(exam_id),"created_by":user["_id"]})
+
+    if exam_obj == None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Exam does not exists")
+    
+    if exam_obj["question_ref"] is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Questions does not exists")
+    
+    total_attempts = list(attempts.find({"exam_ref":exam_id}))
+    for i in total_attempts:
+        user = users.find_one({"_id":i["student_ref"]})
+        if user:
+            i["user"] = {
+                "name":user["full_name"],
+                "email":user["email"]
+            }
+        else:
+            i["user_ref"] = None
+    payload["total_attempts"] = total_attempts
+    payload["len_total_attempts"] = len(total_attempts)
+
+    return json.loads(json.dumps(payload,default=str))
+
+    # except Exception as e:
+    #     print("Exception occurred")
+    #     print(e)
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="An error occured")

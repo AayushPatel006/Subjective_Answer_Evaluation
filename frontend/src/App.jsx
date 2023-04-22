@@ -54,8 +54,8 @@ function App() {
 					/>
 					<Route
 						exact
-						path="/facultyMarks"
-						element={<FacultyMarks/>}
+						path="/examDetails"
+						element={<FacultyMarks />}
 					/>
 					<Route
 						exact
