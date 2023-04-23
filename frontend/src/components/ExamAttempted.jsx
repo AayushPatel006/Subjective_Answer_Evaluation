@@ -38,57 +38,6 @@ const ExamAttempted = () => {
 		getAllAttemptedAnswers();
 	}, []);
 
-	const lists = {
-		exam: [
-			"Question 1",
-			"Question 2",
-			"Question 3",
-			"Question 4",
-			"Question 5",
-			"Question 6",
-			"Question 7",
-			"Question 8",
-			"Question 9",
-			"Question 10",
-			"Question 11",
-			"Question 12",
-			"Question 13",
-			"Question 14",
-		],
-		answer: [
-			"Answer 1",
-			"Answer 2",
-			"Answer 3",
-			"Answer 4",
-			"Answer 5",
-			"Answer 6",
-			"Answer 7",
-			"Answer 8",
-			"Answer 9",
-			"Answer 10",
-			"Answer 11",
-			"Answer 12",
-			"Answer 13",
-			"Answer 14",
-		],
-		score: [
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-		],
-	};
-
 	return (
 		<div className="w-full h-screen flex flex-grow items-center bg-[#0F1F38] justify-center ">
 			<Nav />
