@@ -149,6 +149,52 @@ async def get_exam_score(user_obj: str = Depends(decode_token)):
         print("Excepiton occured")
 
 
+@router.get('/get_exam_score/{exam_ref}')
+def get_exam_score(exam_ref: str, user_obj: str = Depends(decode_token)):
+    try:
+        # verifying user
+        user = users.find_one({"email": user_obj["email"]})
+        if (user['role'] == 'teacher'):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="Unauthorized user")
+
+        payload = {}
+
+        # get exam details
+        exam = exams.find_one({"_id": ObjectId(exam_ref)}, {
+                              "_id": 1, "title": 1, "duration": 1})
+        # add exam details to payload
+        payload["exam"] = exam
+
+        # get answers from attempts
+        answers = attempts.find_one({"student_ref": user["_id"], "exam_ref":
+                                     exam_ref}, {"answers": 1})
+        answers = answers["answers"]
+
+        # get questions from questions collection
+        question = questions.find_one(
+            {"exam_ref": exam_ref}, {"questions": 1})
+        question = question["questions"]
+
+        # initilize empty attempted_answers
+        attempted_answers = []
+
+        # map answers and questions
+        for answer in answers:
+            for quest in question:
+                if answer["index"] == quest["index"]:
+                    attempted_answers.append({"index": answer["index"], "question": quest["question"], "answer": answer["answer"], "model_answer": quest["model_answer"],
+                                             "marks_obtained": answer["marks_obtained"], "max_marks": quest["max_marks"]})
+                    break
+        payload["attempted_answers"] = attempted_answers
+
+        return json.loads(json.dumps(payload, default=str))
+
+    except Exception as e:
+        print(e)
+        print("Exception Occured")
+
+
 def getIds(exam):
     return exam['exam_id']
 

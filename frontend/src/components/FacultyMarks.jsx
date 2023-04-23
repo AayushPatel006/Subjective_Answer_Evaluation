@@ -31,41 +31,6 @@ const FacultyMarks = () => {
 		fetchAttempts();
 	}, []);
 
-	const lists = {
-		student_name: [
-			"Question 1",
-			"Question 2",
-			"Question 3",
-			"Question 4",
-			"Question 5",
-			"Question 6",
-			"Question 7",
-			"Question 8",
-			"Question 9",
-			"Question 10",
-			"Question 11",
-			"Question 12",
-			"Question 13",
-			"Question 14",
-		],
-		student_marks: [
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-			"90",
-		],
-	};
-
 	const { user } = useAuth();
 	return (
 		<div className="w-full h-screen flex flex-grow items-center bg-[#0F1F38] justify-center ">
@@ -89,10 +54,7 @@ const FacultyMarks = () => {
 							</thead>
 							<tbody className="">
 								{attempts.map((attempt, index) => (
-									<tr
-										key={attempt._id}
-										className="bg-transparent"
-									>
+									<tr key={attempt._id} className="bg-transparent">
 										<td className="text-center">{attempt.user.name}</td>
 										<td className="text text-center px-2 py-1">
 											{attempt.total_marks}
