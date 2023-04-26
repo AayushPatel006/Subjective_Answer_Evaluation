@@ -88,6 +88,7 @@ const StudHome = () => {
 				true
 			);
 			if (result.data) {
+				console.log(result.data);
 				updateExamScore(result.data);
 			} else {
 				notify("No exams appered yet", "success");
@@ -309,10 +310,10 @@ const StudHome = () => {
 										</a>
 										<div
 											className="justify-center [word-wrap: break-word] mr-2 mb-1 flex h-[32px] cursor-pointer 
-				  items-center rounded-[16px] border border-white border-dashed w-[50px]
+				  items-center rounded-[16px] border border-white border-dashed w-[90px]
 				  bg-[transparent] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-white shadow-sm"
 										>
-											{exam["marks_obtained"]}
+											{exam["marks_obtained"]} / {exam["max_marks"]}
 										</div>
 									</li>
 								))}
