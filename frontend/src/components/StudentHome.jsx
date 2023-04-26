@@ -74,7 +74,7 @@ const StudHome = () => {
 				true
 			);
 
-			// console.log(result.data);
+			console.log(result.data);
 			updateRegisteredExam(result.data);
 		};
 		const getExamScore = async () => {
@@ -88,10 +88,9 @@ const StudHome = () => {
 				true
 			);
 			if (result.data) {
-				console.log(result.data);
 				updateExamScore(result.data);
 			} else {
-				notify("No exams appered yet", "success");
+				//notify("No exams appered yet", "success");
 			}
 		};
 		getExamScore();
@@ -149,9 +148,40 @@ const StudHome = () => {
 													"&examId=" +
 													value["_id"]
 												}
-												className={classNames("block px-4 py-2 text-sm")}
+												className={classNames(
+													"flex px-4 py-2 text-sm flex-col"
+												)}
 											>
-												{value["title"]}
+												<div
+													style={{
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "space-between",
+														width: "100%",
+													}}
+												>
+													<div>{value["title"] + "    "}</div>
+													<div
+														style={{ display: "flex", flexDirection: "column" }}
+													>
+														<div>
+															Start time -
+															{new Date(value["start_time"]).toDateString() +
+																" " +
+																new Date(
+																	value["start_time"]
+																).toLocaleTimeString()}
+														</div>
+														<div>
+															End time -
+															{new Date(value["end_time"]).toDateString() +
+																" " +
+																new Date(
+																	value["end_time"]
+																).toLocaleTimeString()}
+														</div>
+													</div>
+												</div>
 											</Link>
 										</>
 									);
@@ -199,7 +229,12 @@ const StudHome = () => {
 						leaveTo="transform opacity-0 scale-95"
 					>
 						<Menu.Items className="flex text-white text-md font-semibold w-full mt-2 origin-top-right bg-[#8E7970] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-							<div className="py-1">
+							<div
+								style={{
+									width: "100%",
+								}}
+								className="py-1"
+							>
 								<RegisteredExams registeredExam={registeredExam} />
 							</div>
 						</Menu.Items>
