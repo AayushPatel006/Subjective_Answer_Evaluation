@@ -121,8 +121,10 @@ async def attempt_exam(exam_id: str, data: AttemptModel, user_obj: str = Depends
 async def get_exam_score(user_obj: str = Depends(decode_token)):
     try:
         user = await get_user_obj(user_obj["email"])
+
         exam_list_fetched = list(exams.find(
             {"status": "completed"}, {"_id": 1, "title": 1}))
+
         exam_list = []
         for exam in exam_list_fetched:
             exam_list.append(exam["_id"].__str__())
@@ -138,9 +140,14 @@ async def get_exam_score(user_obj: str = Depends(decode_token)):
                                 detail="No exams attempted")
         exam_list = []
         for exam in attemps_list:
+            question = questions.find_one({"exam_ref": exam["exam_ref"]})
+            max_marks = 0
+            for quest in question["questions"]:
+                max_marks += quest["max_marks"]
             exam_list.append({
                 "exam": exams.find_one({"_id": ObjectId(exam["exam_ref"])}, {"title": 1}),
-                "marks_obtained": exam["total_marks"]
+                "marks_obtained": exam["total_marks"],
+                "max_marks": max_marks
             })
 
         return json.loads(json.dumps(exam_list, default=str))

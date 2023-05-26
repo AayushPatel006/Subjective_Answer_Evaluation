@@ -59,32 +59,76 @@ const ExamAttempted = () => {
 										colspan="2"
 										className="w-96 px-2 py-1 border-r-2 border-white font-semibold text-center"
 									>
+										Q. No.
+									</th>
+									<th
+										colspan="2"
+										className="w-96 px-2 py-1 border-r-2 border-white font-semibold text-center"
+									>
 										Question
+									</th>
+									<th
+										colspan="2"
+										className="w-96 px-2 py-1 border-r-2 border-white font-semibold text-center"
+									>
+										Your Answer
+									</th>
+									<th
+										colspan="2"
+										className="w-96 px-2 py-1 border-r-2 border-white font-semibold text-center"
+									>
+										Expected Answer
 									</th>
 									<th className="w-96 text-center px-2 py-1 font-semibold">
 										Your score
 									</th>
 								</tr>
 							</thead>
+
 							<tbody>
 								{answers &&
 									answers["attempted_answers"].map((exam, index) => (
 										<>
-											<tr key={exam["index"]} className="bg-transparent">
-												<td colspan="2" className="text-center">
+											<tr
+												key={exam["index"]}
+												className="bg-transparent h-[30px] mt-2 ml-1"
+											>
+												<td
+													colspan="2"
+													className={`text-center align-text-top ${
+														index == 0 ? "pt-2" : ""
+													}`}
+												>
+													hello
+												</td>
+												<td
+													colspan="2"
+													className="text-left align-text-top ml-2"
+												>
 													{exam["question"]}?
 												</td>
-												<td rowspan="3" className="text-center px-2 py-1">
+												<td
+													colspan="2"
+													className={`text-left align-text-top ${
+														index == 0 ? "pt-2" : ""
+													}`}
+												>
+													{exam["answer"]}
+												</td>
+												<td
+													colspan="2"
+													className={`text-left align-text-top ${
+														index == 0 ? "pt-2" : ""
+													}`}
+												>
+													{exam["model_answer"]}
+												</td>
+												<td
+													colspan="2"
+													className="text-center px-2 py-1 align-text-top"
+												>
 													{exam["marks_obtained"]} / {exam["max_marks"]}
 												</td>
-											</tr>
-											<tr>
-												<td>Your answer:</td>
-												<td>{exam["answer"]}</td>
-											</tr>
-											<tr>
-												<td>Expected answer:</td>
-												<td>{exam["model_answer"]}</td>
 											</tr>
 										</>
 									))}
