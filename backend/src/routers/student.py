@@ -303,6 +303,7 @@ async def get_questions(exam_id: str, user_obj: str = Depends(decode_token)):
     return {
         "ok": True,
         "questions": all_questions["questions"] if all_questions else [],
+        "end_time":exam["end_time"],
         "exam_ref": exam_id
     }
 

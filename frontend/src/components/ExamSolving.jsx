@@ -12,6 +12,7 @@ import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import httpRequest from "../utils/httpRequest";
 import notify from "../utils/toast";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import Countdown from "react-countdown";
 
 function useQuery() {
 	const { search } = useLocation();
@@ -57,8 +58,25 @@ const examSolving = () => {
 	const [length, updateLength] = useState(0);
 	const [questions, updateQuestion] = useState([]);
 	const [questionFetched, updateQuestionFetch] = useState(false);
+	const [end_time, setend_time] = useState(false);
 	const answer = useRef("");
 	const navigate = useNavigate();
+
+	// Renderer callback with condition
+	const renderer = ({ hours, minutes, seconds, completed }) => {
+		if (completed) {
+			// Render a completed state
+			navigate("/");
+			notify("Exam Ended!", "success");
+		} else {
+			// Render a countdown
+			return (
+				<span>
+					{hours}:{minutes}:{seconds}
+				</span>
+			);
+		}
+	};
 
 	useEffect(() => {
 		const getExamQuestions = async () => {
@@ -81,7 +99,9 @@ const examSolving = () => {
 			}
 			console.log(result, "result");
 			updateQuestion(result.data.questions);
+
 			updateLength(result.data.questions.length);
+			setend_time(result.data.end_time);
 			console.log(questions.current, "1");
 			updateQuestionFetch(true);
 		};
@@ -145,8 +165,15 @@ const examSolving = () => {
 			<Nav />
 			<div className="flex">
 				<div className="overflow-auto flex flex-col w-[325px] h-[325px] justify-center shadow-md shadow-black bg-[#1B4B5A] mt-16 ml-8 mr-8">
-					<div className="mt-2">
-						<Timer timeInSeconds={5} />
+					<div className="mt-2 text-center text-white">
+						{end_time && (
+							<Countdown
+								date={new Date(end_time)}
+								renderer={renderer}
+							/>
+						)}
+
+						{/* <Timer timeInSeconds={5} /> */}
 					</div>
 					<ul className=" justify-center mt-3 [word-wrap: break-word] flex flex-wrap w-full cursor-pointer items-center">
 						{listItems}
@@ -162,7 +189,10 @@ const examSolving = () => {
 						{query.get("examName")}
 					</h1>
 					<div className="flex flex-col mt-8 w-full">
-						<label htmlFor="exam-date" className="items-center">
+						<label
+							htmlFor="exam-date"
+							className="items-center"
+						>
 							<span className="ml-1 w-48 mr-1 justify-between text-md font-semibold text-white">
 								Question {index} :
 							</span>
@@ -175,7 +205,10 @@ const examSolving = () => {
 								<Question questions={questions} />
 							</p>
 						</label>
-						<label htmlFor="exam-date" className="flex items-center mt-4">
+						<label
+							htmlFor="exam-date"
+							className="flex items-center mt-4"
+						>
 							<span className="ml-1 w-20 mr-1 text-md font-semibold text-white">
 								Answer:
 							</span>
